@@ -51,11 +51,3 @@ volumes:
   - name: kafka-ui
     secret:
       secretName: controlcenter-pkcs12
-
-server:
-  port: 443
-  ssl:
-    enabled: true
-    key-store: /mnt/sslcerts/truststore.p12
-    key-store-password: <keystore_password>
-
