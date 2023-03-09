@@ -16,7 +16,7 @@ yamlApplicationConfig:
             address: https://connect.confluent.svc.cluster.local:8083
             username: connect
             password: connect-secret
-            keystorelocation: /mnt/sslcerts/truststore.p12
+            keystorelocation: /mnt/sslcerts/keystore.p12
             keystorepassword: mystorepassword
             truststorelocation: /mnt/sslcerts/truststore.p12
             truststorepassword: mystorepassword
@@ -25,7 +25,7 @@ yamlApplicationConfig:
             username: sr
             password: sr-secret
         schemaRegistrySSL:
-            keystorelocation: /mnt/sslcerts/truststore.p12
+            keystorelocation: /mnt/sslcerts/keystore.p12
             keystorepassword: mystorepassword
             truststorelocation: /mnt/sslcerts/truststore.p12
             truststorepassword: mystorepassword
@@ -34,7 +34,7 @@ yamlApplicationConfig:
             username: ksql
             password: ksql-secret
         ksqlDBServerSSL:
-            keystorelocation: /mnt/sslcerts/truststore.p12
+            keystorelocation: /mnt/sslcerts/keystore.p12
             keystorepassword: mystorepassword
             truststorelocation: /mnt/sslcerts/truststore.p12
             truststorepassword: mystorepassword
@@ -51,3 +51,11 @@ volumes:
   - name: kafka-ui
     secret:
       secretName: controlcenter-pkcs12
+
+server:
+  port: 443
+  ssl:
+    enabled: true
+    key-store: /mnt/sslcerts/truststore.p12
+    key-store-password: <keystore_password>
+
