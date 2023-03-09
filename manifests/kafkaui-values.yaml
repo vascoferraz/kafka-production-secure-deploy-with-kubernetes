@@ -41,7 +41,7 @@ yamlApplicationConfig:
 
 service:
   type: NodePort
-  port: 30901
+  nodePort: 30901
 
 volumeMounts:
   - mountPath: /mnt/sslcerts
