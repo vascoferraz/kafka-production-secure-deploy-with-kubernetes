@@ -1,1 +1,13 @@
-# kafka-production-secure-deploy-with-kubernetes
+This is an excerpt from one of the official Confluent [repositories](https://github.com/confluentinc/confluent-kubernetes-examples), regarding the [production-secure-deploy](https://github.com/confluentinc/confluent-kubernetes-examples/tree/master/security/production-secure-deploy) which I added a few more features and tools, like a PostgreSQL database and Kafka-UI.
+
+To deploy the cluster on your local machine just run the following script:
+```sh
+cd scripts
+./1-install.sh  
+ ```
+
+ To tear down the entire cluster run the uninstall script:
+```sh
+cd scripts
+./8-uninstall.sh 
+ ```
