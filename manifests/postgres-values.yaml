@@ -1,0 +1,10 @@
+global:
+  postgresql:
+    auth:
+      postgresPassword: "change-me"
+
+primary:
+  service:
+    type: NodePort
+    nodePorts:
+      postgresql: 30902

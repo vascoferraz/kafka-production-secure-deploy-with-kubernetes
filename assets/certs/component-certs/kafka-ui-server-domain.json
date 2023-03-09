@@ -1,0 +1,18 @@
+{
+  "CN": "kafka-ui",
+  "hosts": [
+    "kafka-ui",
+    "kafka-ui.mydomain.example"
+  ],
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "Universe",
+      "ST": "Pangea",
+      "L": "Earth"
+    }
+  ]
+}

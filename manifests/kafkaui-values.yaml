@@ -1,0 +1,53 @@
+yamlApplicationConfig:
+  kafka:
+    clusters:
+      - name: my-kafka-cluster
+        bootstrapServers: "kafka.confluent.svc.cluster.local:9092"
+        properties:
+          sasl.mechanism: PLAIN
+          security.protocol: SASL_SSL
+          sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="kafka" password="kafka-secret";
+          ssl.keystore.location: /mnt/sslcerts/keystore.p12
+          ssl.keystore.password: mystorepassword
+          ssl.truststore.location: /mnt/sslcerts/truststore.p12
+          ssl.truststore.password: mystorepassword
+        kafkaConnect:
+          - name: connect-cluster
+            address: https://connect.confluent.svc.cluster.local:8083
+            username: connect
+            password: connect-secret
+            keystorelocation: /mnt/sslcerts/truststore.p12
+            keystorepassword: mystorepassword
+            truststorelocation: /mnt/sslcerts/truststore.p12
+            truststorepassword: mystorepassword
+        schemaRegistry: https://schemaregistry.confluent.svc.cluster.local:8081
+        schemaRegistryAuth:
+            username: sr
+            password: sr-secret
+        schemaRegistrySSL:
+            keystorelocation: /mnt/sslcerts/truststore.p12
+            keystorepassword: mystorepassword
+            truststorelocation: /mnt/sslcerts/truststore.p12
+            truststorepassword: mystorepassword
+        ksqlDBServer: https://ksqldb.confluent.svc.cluster.local:8088
+        ksqlDBServerAuth:
+            username: ksql
+            password: ksql-secret
+        ksqlDBServerSSL:
+            keystorelocation: /mnt/sslcerts/truststore.p12
+            keystorepassword: mystorepassword
+            truststorelocation: /mnt/sslcerts/truststore.p12
+            truststorepassword: mystorepassword
+
+service:
+  type: NodePort
+  port: 30901
+
+volumeMounts:
+  - mountPath: /mnt/sslcerts
+    name: kafka-ui
+
+volumes:
+  - name: kafka-ui
+    secret:
+      secretName: controlcenter-pkcs12
