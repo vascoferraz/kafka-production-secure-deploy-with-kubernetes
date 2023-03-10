@@ -11,7 +11,8 @@
     "*.destination.svc.cluster.local",
     "*.zookeeper.destination.svc.cluster.local",
     "*.kafka.destination.svc.cluster.local",
-    "*.replicator.destination.svc.cluster.local"
+    "*.replicator.destination.svc.cluster.local",
+    "localhost"
   ],
   "key": {
     "algo": "rsa",
