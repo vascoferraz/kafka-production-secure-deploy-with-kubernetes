@@ -125,7 +125,7 @@ kubectl wait --for=condition=Ready pod/alpine --timeout=60s
 
 # Deploy Kafka UI container
 helm repo add kafka-ui https://provectus.github.io/kafka-ui
-helm upgrade --install kafka-ui kafka-ui/kafka-ui -f ./../manifests/kafkaui-values.yaml
+helm upgrade --install kafka-ui kafka-ui/kafka-ui --version 0.5.4 -f ./../manifests/kafkaui-values.yaml
 pod_name=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep kafka-ui)
 kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
 
