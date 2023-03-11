@@ -3,11 +3,11 @@ This is an excerpt from one of the official Confluent [repositories](https://git
 To deploy the cluster on your local machine just run the following script:
 ```sh
 cd scripts
-./1-install.sh  
+./install.sh  
  ```
 
  To tear down the entire cluster run the uninstall script:
 ```sh
 cd scripts
-./8-uninstall.sh 
+./uninstall.sh 
  ```
