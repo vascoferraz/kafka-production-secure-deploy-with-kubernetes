@@ -11,9 +11,5 @@ kubectl exec -it kafka-0 -c kafka -- kafka-topics --create --bootstrap-server ka
 kubectl cp $TUTORIAL_HOME/connectors/syslog-source-connector.json confluent/connect-0:/tmp/ -c connect
 kubectl exec -it connect-0 -c connect -- curl -s -k -X PUT -H 'Content-Type:application/json' --data @/tmp/syslog-source-connector.json https://connect-0.connect.confluent.svc.cluster.local:8083/connectors/$SOURCE_CONNECTOR/config -u testadmin:testadmin
 
-# Copy and deploy sink connector config into the pod
-#
-#
-
 # Start the syslog generator python script on the alpine container
 kubectl exec -t alpine -c alpine -- nohup /usr/sbin/syslog_gen.py --host connect-0.connect.confluent.svc.cluster.local --port 5559 --file /usr/sbin/dataset.txt --count 1 --sleep 1 1> /dev/null 2>&1 &
