@@ -1,0 +1,123 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    meta.helm.sh/release-name: kafka-ui
+    meta.helm.sh/release-namespace: confluent
+  creationTimestamp: "2023-03-13T21:34:45Z"
+  generation: 1
+  labels:
+    app.kubernetes.io/instance: kafka-ui
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kafka-ui
+    app.kubernetes.io/version: v0.6.0
+    helm.sh/chart: kafka-ui-0.6.0
+  name: kafka-ui
+  namespace: confluent
+  resourceVersion: "114804"
+  uid: f4017344-bff3-4e8c-aef7-cbe68c13accc
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: kafka-ui
+      app.kubernetes.io/name: kafka-ui
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/config: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+        checksum/configFromValues: c45ff1061504175b6b12ec5181ef00a904394ac2846ef8fd03c538f5d35eced2
+        checksum/secret: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/instance: kafka-ui
+        app.kubernetes.io/name: kafka-ui
+    spec:
+      containers:
+      - env:
+        - name: SERVER_SSL_ENABLED
+          value: "true"
+        - name: SERVER_SSL_KEY_STORE
+          value: /mnt/sslcerts/keystore.p12
+        - name: SERVER_SSL_KEY_STORE_PASSWORD
+          value: mystorepassword
+        - name: SPRING_CONFIG_ADDITIONAL-LOCATION
+          value: /kafka-ui/config.yml
+        image: docker.io/provectuslabs/kafka-ui:v0.6.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /actuator/health
+            port: 443
+            scheme: HTTPS
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 10
+        name: kafka-ui
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /actuator/health
+            port: 443
+            scheme: HTTPS
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 10
+        resources: {}
+        securityContext: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /mnt/sslcerts
+          name: kafka-ui
+        - mountPath: /kafka-ui/
+          name: kafka-ui-yaml-conf
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: kafka-ui
+      serviceAccountName: kafka-ui
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: kafka-ui
+        secret:
+          defaultMode: 420
+          secretName: controlcenter-pkcs12
+      - configMap:
+          defaultMode: 420
+          name: kafka-ui-fromvalues
+        name: kafka-ui-yaml-conf
+status:
+  conditions:
+  - lastTransitionTime: "2023-03-13T21:34:45Z"
+    lastUpdateTime: "2023-03-13T21:34:45Z"
+    message: Deployment does not have minimum availability.
+    reason: MinimumReplicasUnavailable
+    status: "False"
+    type: Available
+  - lastTransitionTime: "2023-03-13T21:34:45Z"
+    lastUpdateTime: "2023-03-13T21:34:45Z"
+    message: ReplicaSet "kafka-ui-6cc48fdd6c" is progressing.
+    reason: ReplicaSetUpdated
+    status: "True"
+    type: Progressing
+  observedGeneration: 1
+  replicas: 1
+  unavailableReplicas: 1
+  updatedReplicas: 1
