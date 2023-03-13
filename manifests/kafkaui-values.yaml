@@ -39,6 +39,17 @@ yamlApplicationConfig:
             truststorelocation: /mnt/sslcerts/truststore.p12
             truststorepassword: mystorepassword
 
+env:
+  - name: "SERVER_SSL_ENABLED"
+    value: "true"
+  - name: "SERVER_SSL_KEY_STORE"
+    value: "/mnt/sslcerts/keystore.p12"
+  - name: "SERVER_SSL_KEY_STORE_PASSWORD"
+    value: "mystorepassword"
+
+probes:
+  useHttpsScheme: true
+
 service:
   type: NodePort
   nodePort: 30901
