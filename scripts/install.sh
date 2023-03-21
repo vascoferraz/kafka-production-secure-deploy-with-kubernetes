@@ -123,6 +123,23 @@ kubectl exec -it kafka-0 -c kafka -- kafka-acls --bootstrap-server kafka.conflue
 kubectl apply -f $TUTORIAL_HOME/manifests/alpine.yaml
 kubectl wait --for=condition=Ready pod/alpine --timeout=60s
 
+# Create secret with keystore and truststore for Kafka-UI container
+rm ./../assets/certs/generated/keystore.p12
+rm ./../assets/certs/generated/truststore.p12
+kubectl delete secrets kafkaui-pkcs12
+
+openssl pkcs12 -export -in ./../assets/certs/generated/server.pem -inkey ./../assets/certs/generated/server-key.pem -out ./../assets/certs/generated/keystore.p12 -password pass:mystorepassword
+
+keytool -importcert -storetype PKCS12 -keystore ./../assets/certs/generated/truststore.p12 -storepass mystorepassword -alias ca -file ./../assets/certs/generated/ca.pem -noprompt
+
+kubectl create secret generic kafkaui-pkcs12 \
+    --from-file=cacerts.pem=./../assets/certs/generated/ca.pem \
+    --from-file=privkey.pem=./../assets/certs/generated/server-key.pem \
+    --from-file=fullchain.pem=./../assets/certs/generated/server.pem \
+    --from-literal=jksPassword.txt=jksPassword=mystorepassword \
+    --from-file=keystore.p12=./../assets/certs/generated/keystore.p12 \
+    --from-file=truststore.p12=./../assets/certs/generated/truststore.p12
+
 # Deploy Kafka UI container
 helm repo add kafka-ui https://provectus.github.io/kafka-ui
 helm upgrade --install kafka-ui kafka-ui/kafka-ui --version 0.5.4 -f ./../manifests/kafkaui-values.yaml
