@@ -38,6 +38,13 @@ yamlApplicationConfig:
             keystorepassword: mystorepassword
             truststorelocation: /mnt/sslcerts/truststore.p12
             truststorepassword: mystorepassword
+  auth:
+    type: LOGIN_FORM
+  spring:
+    security:
+      user:
+        name: admin
+        password: admin
 
 env:
   - name: "SERVER_SSL_ENABLED"
