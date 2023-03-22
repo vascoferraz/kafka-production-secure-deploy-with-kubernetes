@@ -128,17 +128,17 @@ rm ./../assets/certs/generated/keystore.p12
 rm ./../assets/certs/generated/truststore.p12
 kubectl delete secrets kafkaui-pkcs12
 
-openssl pkcs12 -export -in ./../assets/certs/generated/server.pem -inkey ./../assets/certs/generated/server-key.pem -out ./../assets/certs/generated/keystore.p12 -password pass:mystorepassword
+openssl pkcs12 -export -in $TUTORIAL_HOME/assets/certs/generated/server.pem -inkey $TUTORIAL_HOME/assets/certs/generated/server-key.pem -out $TUTORIAL_HOME/assets/certs/generated/keystore.p12 -password pass:mystorepassword
 
-keytool -importcert -storetype PKCS12 -keystore ./../assets/certs/generated/truststore.p12 -storepass mystorepassword -alias ca -file ./../assets/certs/generated/ca.pem -noprompt
+keytool -importcert -storetype PKCS12 -keystore $TUTORIAL_HOME/assets/certs/generated/truststore.p12 -storepass mystorepassword -alias ca -file $TUTORIAL_HOME/assets/certs/generated/ca.pem -noprompt
 
 kubectl create secret generic kafkaui-pkcs12 \
-    --from-file=cacerts.pem=./../assets/certs/generated/ca.pem \
-    --from-file=privkey.pem=./../assets/certs/generated/server-key.pem \
-    --from-file=fullchain.pem=./../assets/certs/generated/server.pem \
+    --from-file=cacerts.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
+    --from-file=privkey.pem=$TUTORIAL_HOME/assets/certs/generated/server-key.pem \
+    --from-file=fullchain.pem=$TUTORIAL_HOME/assets/certs/generated/server.pem \
     --from-literal=jksPassword.txt=jksPassword=mystorepassword \
-    --from-file=keystore.p12=./../assets/certs/generated/keystore.p12 \
-    --from-file=truststore.p12=./../assets/certs/generated/truststore.p12
+    --from-file=keystore.p12=$TUTORIAL_HOME/assets/certs/generated/keystore.p12 \
+    --from-file=truststore.p12=$TUTORIAL_HOME/assets/certs/generated/truststore.p12
 
 # Deploy Kafka UI container
 helm repo add kafka-ui https://provectus.github.io/kafka-ui
