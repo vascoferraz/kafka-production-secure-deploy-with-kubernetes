@@ -124,8 +124,8 @@ kubectl apply -f $TUTORIAL_HOME/manifests/alpine.yaml
 kubectl wait --for=condition=Ready pod/alpine --timeout=60s
 
 # Create secret with keystore and truststore for Kafka-UI container
-rm ./../assets/certs/generated/keystore.p12
-rm ./../assets/certs/generated/truststore.p12
+rm $TUTORIAL_HOME/assets/certs/generated/keystore.p12
+rm $TUTORIAL_HOME/assets/certs/generated/truststore.p12
 kubectl delete secrets kafkaui-pkcs12
 
 openssl pkcs12 -export -in $TUTORIAL_HOME/assets/certs/generated/server.pem -inkey $TUTORIAL_HOME/assets/certs/generated/server-key.pem -out $TUTORIAL_HOME/assets/certs/generated/keystore.p12 -password pass:mystorepassword
