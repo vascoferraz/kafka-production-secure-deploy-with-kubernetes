@@ -295,7 +295,7 @@ spec:
     type: nodePort
     nodePort:
       nodePortOffset: 30900
-      host: localhost
+      host: https://localhost:9021
   tls:
     secretRef: tls-group1
   dependencies:
