@@ -1,10 +1,18 @@
 #!/bin/bash
 
-# Set up environment variable
+# Set up environment variables
+export TUTORIAL_HOME="./../../"
 export SOURCE_CONNECTOR="syslog-source-connector"
 
+# Build custom Alpine image
+docker build -t alpine-vf:3.17.2 $TUTORIAL_HOME/docker-images/alpine
+
+# Deploy alpine container for the syslog generator
+kubectl apply -f $TUTORIAL_HOME/manifests/alpine.yaml
+kubectl wait --for=condition=Ready pod/alpine --timeout=60s
+
 # Create syslog topic
-kubectl exec -it kafka-0 -c kafka -- kafka-topics --create --bootstrap-server kafka.confluent.svc.cluster.local:9092 --command-config /opt/confluentinc/etc/kafka/kafka.properties --topic syslog --replication-factor 3 --partitions 1
+kubectl exec -it kafka-0 -c kafka -- kafka-topics --create --bootstrap-server kafka.confluent.svc.cluster.local:9092 --command-config /opt/confluentinc/etc/kafka/kafka.properties --topic syslog --replication-factor 3 --partitions 3
 
 # Copy and deploy source connector config into the pod
 kubectl cp ./connectors/syslog-source-connector.json confluent/connect-0:/tmp/ -c connect
