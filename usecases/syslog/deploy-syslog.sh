@@ -16,15 +16,21 @@ kubectl exec -it kafka-0 -c kafka -- kafka-topics --create --bootstrap-server ka
 
 # Register key schema
 kubectl cp ./schemas/syslog-key.avsc confluent/schemaregistry-0:/tmp/syslog-key.avsc -c schemaregistry
-kubectl exec -it schemaregistry-0 -c schemaregistry -- bash -c 'export SCHEMA=$(jq tostring /tmp/syslog-key.avsc)'
-kubectl exec -it schemaregistry-0 -c schemaregistry -- curl -k -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" -d"{\"schema\":$SCHEMA}" https://localhost:8081/subjects/syslog-key/versions --user sr:sr-secret
-kubectl exec -it schemaregistry-0 -c schemaregistry -- rm /tmp/syslog-key.avsc
+kubectl exec -it schemaregistry-0 -c schemaregistry -- bash -c 'echo "{\"schema\":" >> /tmp/key'
+kubectl exec -it schemaregistry-0 -c schemaregistry -- bash -c 'jq tostring /tmp/syslog-key.avsc  >> /tmp/key'
+kubectl exec -it schemaregistry-0 -c schemaregistry -- bash -c 'echo '}' >> /tmp/key'
+kubectl exec -it schemaregistry-0 -c schemaregistry -- bash -c 'echo -n $(tr -d "\n" < /tmp/key) > /tmp/key'
+kubectl exec -it schemaregistry-0 -c schemaregistry -- curl -k -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data @/tmp/key https://localhost:8081/subjects/syslog-key/versions --user sr:sr-secret
+kubectl exec -it schemaregistry-0 -c schemaregistry -- rm /tmp/syslog-key.avsc /tmp/key
 
 # Register value schema
 kubectl cp ./schemas/syslog-value.avsc confluent/schemaregistry-0:/tmp/syslog-value.avsc -c schemaregistry
-kubectl exec -it schemaregistry-0 -c schemaregistry -- bash -c 'export SCHEMA=$(jq tostring /tmp/syslog-value.avsc)'
-kubectl exec -it schemaregistry-0 -c schemaregistry -- curl -k -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" -d"{\"schema\":$SCHEMA}" https://localhost:8081/subjects/syslog-value/versions --user sr:sr-secret
-kubectl exec -it schemaregistry-0 -c schemaregistry -- rm /tmp/syslog-key.avsc
+kubectl exec -it schemaregistry-0 -c schemaregistry -- bash -c 'echo "{\"schema\":" >> /tmp/value'
+kubectl exec -it schemaregistry-0 -c schemaregistry -- bash -c 'jq tostring /tmp/syslog-value.avsc  >> /tmp/value'
+kubectl exec -it schemaregistry-0 -c schemaregistry -- bash -c 'echo '}' >> /tmp/value'
+kubectl exec -it schemaregistry-0 -c schemaregistry -- bash -c 'echo -n $(tr -d "\n" < /tmp/value) > /tmp/value'
+kubectl exec -it schemaregistry-0 -c schemaregistry -- curl -k -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data @/tmp/value https://localhost:8081/subjects/syslog-value/versions --user sr:sr-secret
+kubectl exec -it schemaregistry-0 -c schemaregistry -- rm /tmp/syslog-value.avsc /tmp/value
 
 # Copy and deploy source connector config into the pod
 kubectl cp ./connectors/syslog-source-connector.json confluent/connect-0:/tmp/ -c connect
