@@ -3,6 +3,7 @@
 # Set up environment variables
 export TUTORIAL_HOME="./../../"
 export SOURCE_CONNECTOR="syslog-source-connector"
+export SINK_CONNECTOR="syslog-sink-connector"
 
 # Build custom Alpine image
 docker build -t alpine-vf:3.17.2 $TUTORIAL_HOME/docker-images/alpine-syslog
@@ -26,6 +27,10 @@ kubectl exec -it schemaregistry-0 -c schemaregistry -- rm /tmp/syslog-value.avsc
 # Copy and deploy source connector config into the pod
 kubectl cp ./connectors/syslog-source-connector.json confluent/connect-0:/tmp/ -c connect
 kubectl exec -it connect-0 -c connect -- curl -s -k -X PUT -H 'Content-Type:application/json' --data @/tmp/syslog-source-connector.json https://connect-0.connect.confluent.svc.cluster.local:8083/connectors/$SOURCE_CONNECTOR/config -u testadmin:testadmin
+
+# Copy and deploy sink connector config into the pod
+kubectl cp ./connectors/syslog-sink-connector.json confluent/connect-0:/tmp/ -c connect
+kubectl exec -it connect-0 -c connect -- curl -s -k -X PUT -H 'Content-Type:application/json' --data @/tmp/syslog-sink-connector.json https://connect-0.connect.confluent.svc.cluster.local:8083/connectors/$SINK_CONNECTOR/config -u testadmin:testadmin
 
 # Start the syslog generator python script on the alpine container
 kubectl exec -t alpine-syslog -c alpine-syslog -- nohup /usr/sbin/syslog_gen.py --host connect-0.connect.confluent.svc.cluster.local --port 5559 --file /usr/sbin/dataset.txt --count 1 --sleep 1 1> /dev/null 2>&1 &
