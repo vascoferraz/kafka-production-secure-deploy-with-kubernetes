@@ -14,15 +14,6 @@ kubectl wait --for=condition=Ready pod/alpine-syslog --timeout=60s
 # Create syslog topic
 kubectl exec -it kafka-0 -c kafka -- kafka-topics --create --bootstrap-server kafka.confluent.svc.cluster.local:9092 --command-config /opt/confluentinc/etc/kafka/kafka.properties --topic syslog --replication-factor 3 --partitions 3
 
-# Register key schema
-kubectl cp ./schemas/syslog-key.avsc confluent/schemaregistry-0:/tmp/syslog-key.avsc -c schemaregistry
-kubectl exec -it schemaregistry-0 -c schemaregistry -- bash -c 'echo "{\"schema\":" >> /tmp/key'
-kubectl exec -it schemaregistry-0 -c schemaregistry -- bash -c 'jq tostring /tmp/syslog-key.avsc  >> /tmp/key'
-kubectl exec -it schemaregistry-0 -c schemaregistry -- bash -c 'echo '}' >> /tmp/key'
-kubectl exec -it schemaregistry-0 -c schemaregistry -- bash -c 'echo -n $(tr -d "\n" < /tmp/key) > /tmp/key'
-kubectl exec -it schemaregistry-0 -c schemaregistry -- curl -k -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data @/tmp/key https://localhost:8081/subjects/syslog-key/versions --user sr:sr-secret
-kubectl exec -it schemaregistry-0 -c schemaregistry -- rm /tmp/syslog-key.avsc /tmp/key
-
 # Register value schema
 kubectl cp ./schemas/syslog-value.avsc confluent/schemaregistry-0:/tmp/syslog-value.avsc -c schemaregistry
 kubectl exec -it schemaregistry-0 -c schemaregistry -- bash -c 'echo "{\"schema\":" >> /tmp/value'
