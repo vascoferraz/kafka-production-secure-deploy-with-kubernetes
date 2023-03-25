@@ -3,14 +3,14 @@
 # Set the current tutorial directory
 export TUTORIAL_HOME="./.."
 
-# Build custom Kafka Connect image
-docker build -t confluentinc/cp-server-connect-vf:7.3.0 $TUTORIAL_HOME/docker-images/connect
-
 # Build custom Kafka Broker image
 docker build -t confluentinc/cp-server-vf:7.3.0 $TUTORIAL_HOME/docker-images/kafka
 
-# Build custom Alpine image
-docker build -t alpine-vf:3.17.2 $TUTORIAL_HOME/docker-images/alpine
+# Build custom Kafka Connect image
+docker build -t confluentinc/cp-server-connect-vf:7.3.0 $TUTORIAL_HOME/docker-images/connect
+
+# Build custom Schema Registry image
+docker build -t confluentinc/cp-schema-registry-vf:7.3.0 $TUTORIAL_HOME/docker-images/schema-registry
 
 # Update helm repositories
 helm repo update
@@ -118,10 +118,6 @@ kubectl apply -f $TUTORIAL_HOME/rolebindings/controlcenter-sr-rolebindings.yaml 
 
 # Set ACL for user connect
 kubectl exec -it kafka-0 -c kafka -- kafka-acls --bootstrap-server kafka.confluent.svc.cluster.local:9092 --command-config /opt/confluentinc/etc/kafka/kafka.properties --add --allow-principal User:connect --allow-host "*" --operation All --topic "*" --group "*"
-
-# Deploy alpine container for the syslog generator
-kubectl apply -f $TUTORIAL_HOME/manifests/alpine.yaml
-kubectl wait --for=condition=Ready pod/alpine --timeout=60s
 
 # Create secret with keystore and truststore for Kafka-UI container
 rm $TUTORIAL_HOME/assets/certs/generated/keystore.p12

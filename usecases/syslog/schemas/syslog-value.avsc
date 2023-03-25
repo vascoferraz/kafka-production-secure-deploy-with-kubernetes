@@ -1,0 +1,283 @@
+{
+  "type": "record",
+  "name": "Message",
+  "namespace": "io.confluent.syslog",
+  "fields": [
+    {
+      "name": "name",
+      "type": [
+        "null",
+        {
+          "type": "string",
+          "connect.doc": ""
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "type",
+      "type": {
+        "type": "string",
+        "connect.doc": "Type of message received"
+      }
+    },
+    {
+      "name": "message",
+      "type": [
+        "null",
+        {
+          "type": "string",
+          "connect.doc": ""
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "host",
+      "type": [
+        "null",
+        {
+          "type": "string",
+          "connect.doc": ""
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "version",
+      "type": [
+        "null",
+        {
+          "type": "int",
+          "connect.doc": ""
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "level",
+      "type": [
+        "null",
+        {
+          "type": "int",
+          "connect.doc": ""
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "tag",
+      "type": [
+        "null",
+        {
+          "type": "string",
+          "connect.doc": ""
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "extension",
+      "type": [
+        "null",
+        {
+          "type": "map",
+          "values": "string",
+          "connect.doc": ""
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "severity",
+      "type": [
+        "null",
+        {
+          "type": "string",
+          "connect.doc": ""
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "appName",
+      "type": [
+        "null",
+        {
+          "type": "string",
+          "connect.doc": ""
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "facility",
+      "type": [
+        "null",
+        {
+          "type": "int",
+          "connect.doc": ""
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "remoteAddress",
+      "type": [
+        "null",
+        {
+          "type": "string",
+          "connect.doc": ""
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "rawMessage",
+      "type": [
+        "null",
+        {
+          "type": "string",
+          "connect.doc": ""
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "processId",
+      "type": [
+        "null",
+        {
+          "type": "string",
+          "connect.doc": ""
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "messageId",
+      "type": [
+        "null",
+        {
+          "type": "string",
+          "connect.doc": ""
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "structuredData",
+      "type": [
+        "null",
+        {
+          "type": "array",
+          "items": {
+            "type": "record",
+            "name": "StructuredData",
+            "fields": [
+              {
+                "name": "id",
+                "type": [
+                  "null",
+                  {
+                    "type": "string",
+                    "connect.doc": ""
+                  }
+                ],
+                "default": null
+              },
+              {
+                "name": "structuredDataElements",
+                "type": [
+                  "null",
+                  {
+                    "type": "map",
+                    "values": "string",
+                    "connect.doc": ""
+                  }
+                ],
+                "default": null
+              }
+            ],
+            "connect.name": "io.confluent.syslog.StructuredData"
+          },
+          "connect.doc": ""
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "deviceVendor",
+      "type": [
+        "null",
+        {
+          "type": "string",
+          "connect.doc": "Product name of the device."
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "deviceProduct",
+      "type": [
+        "null",
+        {
+          "type": "string",
+          "connect.doc": "Product name of the device."
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "deviceVersion",
+      "type": [
+        "null",
+        {
+          "type": "string",
+          "connect.doc": "Version of the device."
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "deviceEventClassId",
+      "type": [
+        "null",
+        {
+          "type": "string",
+          "connect.doc": "Device Event Class ID is a unique identifier per event-type. This can be a string or an integer. Device Event ClassID identifies the type of event reported. In the intrusion detection system (IDS) world, each signature or rule that detects certain activity has a unique Device Event ClassID assigned. This is a requirement for other types of devices as well, and helps correlation engines process the events. Also known as Signature ID."
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "timestamp",
+      "type": [
+        "null",
+        {
+          "type": "long",
+          "connect.doc": "Time of the message.",
+          "connect.version": 1,
+          "connect.name": "org.apache.kafka.connect.data.Timestamp",
+          "logicalType": "timestamp-millis"
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "receivedDate",
+      "type": [
+        "null",
+        {
+          "type": "long",
+          "connect.doc": "Timestamp when syslog message is received.",
+          "connect.version": 1,
+          "connect.name": "org.apache.kafka.connect.data.Timestamp",
+          "logicalType": "timestamp-millis"
+        }
+      ],
+      "default": null
+    }
+  ],
+  "connect.name": "io.confluent.syslog.Message"
+}

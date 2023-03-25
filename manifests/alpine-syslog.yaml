@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: alpine
+  name: alpine-syslog
   namespace: confluent
 spec:
   containers:
@@ -11,5 +11,5 @@ spec:
       - "-c"
       - "sleep 60m"
     imagePullPolicy: IfNotPresent
-    name: alpine
+    name: alpine-syslog
   restartPolicy: Always
