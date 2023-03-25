@@ -1,0 +1,25 @@
+{
+  "type": "record",
+  "name": "SyslogMessageKey",
+  "namespace": "io.confluent.syslog",
+  "fields": [
+    {
+      "name": "host",
+      "type": "string"
+    },
+    {
+      "name": "timestamp",
+      "type": [
+        "null",
+        {
+          "type": "long",
+          "connect.version": 1,
+          "connect.name": "org.apache.kafka.connect.data.Timestamp",
+          "logicalType": "timestamp-millis"
+        }
+      ],
+      "default": null
+    }
+  ],
+  "connect.name": "io.confluent.syslog.SyslogMessageKey"
+}
