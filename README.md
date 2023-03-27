@@ -1,9 +1,8 @@
 ## Introduction
 This is an excerpt from one of the official Confluent [repositories](https://github.com/confluentinc/confluent-kubernetes-examples), regarding the [production-secure-deploy](https://github.com/confluentinc/confluent-kubernetes-examples/tree/master/security/production-secure-deploy) which I added a few more features and tools, like a PostgreSQL database, Kafka-UI and a syslog generator.
 
-
 ## Deploy and tear down the environment
-To deploy the cluster on your local machine just run the following script:
+To deploy the Kafka cluster on your local machine just run the following script:
 ```sh
 cd scripts
 ./install.sh  
@@ -27,6 +26,22 @@ Currently, Kafka-UI is exposed via a NodePort and accessed at the following addr
 
 ## Access PostgreSQL
 Currently, the PostgreSQL instance is exposed via a NodePort and accessed using the following command: `psql --host localhost -U postgres -d postgres -p 30902`. The password is `change-me`
+
+## Syslog use case
+After deploying the Kafka cluster on your local machine you are ready to deploy the syslog use case.
+```sh
+cd usecases/syslog
+./deploy-syslog.sh 
+```
+
+To tear down the syslog use case run the tear down script
+```sh
+./teardown-syslog.sh
+```
+
+This use case is not complete. The value syslog schema has two fields with the type `map`. At the time of this writing, the JDBC sink connector is not able to flat maps, so, one of the options is to add a KStream or kSQL to flat these two fields (`extension` and `structuredData`). This improvement will be added in the future but for now, these two fields are ignored.
+
+Also, the syslog source connector is adding a termination character \u0000 at the end of the message and PostgreSQL is not able to handle such chars. To solve this issue, a custom SMT was added to remove those characters of the fields `message` and `rawMessage`.
 
 
 ## Additional notes
