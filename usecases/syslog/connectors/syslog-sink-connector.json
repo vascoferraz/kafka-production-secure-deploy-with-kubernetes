@@ -23,6 +23,7 @@
   "db.timezone": "UTC",
   "auto.create": "true",
   "auto.evolve": "true",
-  "transforms": "flatten",
-  "transforms.flatten.type": "org.apache.kafka.connect.transforms.Flatten$Value"
+  "transforms": "ReplaceField",
+  "transforms.ReplaceField.type": "org.apache.kafka.connect.transforms.ReplaceField$Value",
+  "transforms.ReplaceField.exclude": "extension,structuredData"
 }
