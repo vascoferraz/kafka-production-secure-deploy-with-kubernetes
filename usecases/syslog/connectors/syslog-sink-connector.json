@@ -23,6 +23,9 @@
   "db.timezone": "UTC",
   "auto.create": "true",
   "auto.evolve": "true",
-  "transforms": "flatten",
-  "transforms.flatten.type": "org.apache.kafka.connect.transforms.Flatten$Value"
+  "transforms": "stripNullChars,ReplaceField",
+  "transforms.stripNullChars.type": "io.github.cyberjar09.strip_unicode_null_transform.StripUnicodeNullTransform",
+  "transforms.stripNullChars.fields": "message,rawMessage",
+  "transforms.ReplaceField.type": "org.apache.kafka.connect.transforms.ReplaceField$Value",
+  "transforms.ReplaceField.exclude": "extension,structuredData"
 }

@@ -14,4 +14,6 @@ RUN confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.6.4
 # Install vim
 RUN yum -y install vim
 
+COPY StripUnicodeNullTransform-0.0.2.jar /usr/share/java/kafka/StripUnicodeNullTransform-0.0.2.jar
+
 USER appuser
