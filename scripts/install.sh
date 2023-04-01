@@ -157,9 +157,6 @@ kubectl create secret generic postgres-pkcs12 \
     --from-file=cert.key=$TUTORIAL_HOME/assets/certs/generated/postgres-key.pem \
     --from-file=ca.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem  
 
-# Copy PostgreSQL server root certificate file to Kafka Connect container
-kubectl cp $TUTORIAL_HOME/assets/certs/generated/postgres.pem confluent/connect-0:/tmp/postgres.pem -c connect
-
 # Deploy PostgreSQL container
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm upgrade --install postgresql bitnami/postgresql --version 12.2.6 -f ./../manifests/postgres-values.yaml

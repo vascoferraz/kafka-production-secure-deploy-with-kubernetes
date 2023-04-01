@@ -2,7 +2,7 @@
   "name": "syslog-sink-connector",
   "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
   "tasks.max": "1",
-  "connection.url": "jdbc:postgresql://localhost:5432/postgres?user=postgres&password=change-me",
+  "connection.url": "jdbc:postgresql://postgresql:5432/postgres?user=postgres&password=change-me",
   "ssl.mode": "verify-full",
   "ssl.rootcertfile": "/mnt/sslcerts/ca.pem",
   "key.converter": "org.apache.kafka.connect.storage.StringConverter",
