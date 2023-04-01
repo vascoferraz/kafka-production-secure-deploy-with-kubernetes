@@ -46,6 +46,15 @@ cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
 # Validate server certificate and SANs
 openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/server.pem -text -noout
 
+# Create postgres certificates with the appropriate SANs (SANs listed in postgres-domain.json)
+cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
+-ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
+-config=$TUTORIAL_HOME/assets/certs/single-cert/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certs/single-cert/postgres-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/postgres
+
+# Validate postgres certificate and SANs
+openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/postgres.pem -text -noout
+
 # Provide component TLS certificates
 kubectl create secret generic tls-group1 \
   --from-file=fullchain.pem=$TUTORIAL_HOME/assets/certs/generated/server.pem \
@@ -142,7 +151,13 @@ helm upgrade --install kafka-ui kafka-ui/kafka-ui --version 0.6.1 -f ./../manife
 pod_name=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep kafka-ui)
 kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
 
+# Create secret for PostgreSQL container
+kubectl create secret generic postgres-pkcs12 \
+    --from-file=cert.pem=$TUTORIAL_HOME/assets/certs/generated/postgres.pem \
+    --from-file=cert.key=$TUTORIAL_HOME/assets/certs/generated/postgres-key.pem \
+    --from-file=ca.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem  
+
 # Deploy PostgreSQL container
 helm repo add bitnami https://charts.bitnami.com/bitnami
-helm upgrade --install postgresql bitnami/postgresql --version 11.6.7 -f ./../manifests/postgres-values.yaml
+helm upgrade --install postgresql bitnami/postgresql --version 12.2.6 -f ./../manifests/postgres-values.yaml
 kubectl wait --for=condition=Ready pod/postgresql-0 --timeout=60s

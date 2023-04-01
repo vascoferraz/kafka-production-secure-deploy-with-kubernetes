@@ -25,7 +25,29 @@ Currently, Control Center is exposed via a NodePort and accessed at the followin
 Currently, Kafka-UI is exposed via a NodePort and accessed at the following address: https://localhost:30901. The only available user is an administrator user with the following credentials: `admin:admin`
 
 ## Access PostgreSQL
-Currently, the PostgreSQL instance is exposed via a NodePort and accessed using the following command: `psql --host localhost -U postgres -d postgres -p 30902`. The password is `change-me`
+Currently, the PostgreSQL instance is exposed via a NodePort and accessed using the following commands but first, make sure you are in the `scripts` folder:
+
+#### From your local machine without TLS:
+```sh
+psql "host=localhost port=30902 user=postgres password=change-me dbname=postgres"
+```
+
+#### From your local machine with TLS:
+```sh
+psql "host=localhost port=30902 user=postgres password=change-me dbname=postgres sslmode=verify-full sslrootcert=./../assets/certs/generated/ca.pem sslcert=./../assets/certs/generated/postgres.pem sslkey=./../assets/certs/generated/postgres-key.pem"
+```
+
+#### From inside the PostgreSQL container without TLS:
+```sh
+kubectl exec -it postgresql-0 -c postgresql -- bash
+psql "host=localhost port=5432 user=postgres password=change-me"
+```
+
+#### From inside the PostgreSQL container with TLS:
+```sh
+kubectl exec -it postgresql-0 -c postgresql -- bash
+psql "host=localhost port=5432 user=postgres password=change-me dbname=postgres sslmode=verify-full sslrootcert=/opt/bitnami/postgresql/certs/ca.pem sslcert=/opt/bitnami/postgresql/certs/cert.pem sslkey=/opt/bitnami/postgresql/certs/cert.key"
+```
 
 ## Syslog use case
 After deploying the Kafka cluster on your local machine you are ready to deploy the syslog use case.
