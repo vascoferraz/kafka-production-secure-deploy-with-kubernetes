@@ -8,3 +8,10 @@ primary:
     type: NodePort
     nodePorts:
       postgresql: 30902
+
+tls:
+  enabled: true
+  certificatesSecret: postgres-pkcs12
+  certFilename: cert.pem
+  certKeyFilename: cert.key
+  certCAFilename: ca.pem
