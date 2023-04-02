@@ -14,6 +14,9 @@ RUN confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.6.4
 # Install vim
 RUN yum -y install vim
 
+# Copy custom Single Message Transform that replaces all occurrences of the Unicode character \u0000 (or its equivalent in hexadecimal, \0x00)...
+# ... with nothing in the specified fields of a Struct record.
+# Reference: https://github.com/cyberjar09/StripUnicodeNullTransform
 COPY StripUnicodeNullTransform-0.0.2.jar /usr/share/java/kafka/StripUnicodeNullTransform-0.0.2.jar
 
 USER appuser
