@@ -155,7 +155,7 @@ kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
 kubectl create secret generic postgres-pkcs12 \
     --from-file=cert.pem=$TUTORIAL_HOME/assets/certs/generated/postgres.pem \
     --from-file=cert.key=$TUTORIAL_HOME/assets/certs/generated/postgres-key.pem \
-    --from-file=ca.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem  
+    --from-file=ca.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem
 
 # Deploy PostgreSQL container
 helm repo add bitnami https://charts.bitnami.com/bitnami
