@@ -49,12 +49,7 @@ kubectl exec -it postgresql-0 -c postgresql -- bash
 psql "host=localhost port=5432 user=postgres password=change-me dbname=postgres sslmode=verify-full sslrootcert=/opt/bitnami/postgresql/certs/ca.pem sslcert=/opt/bitnami/postgresql/certs/cert.pem sslkey=/opt/bitnami/postgresql/certs/cert.key"
 ```
 
-#### Additional notes for PostgreSQL:
-Regarding the syslog use case, PostgreSQL is configured to accept TLS connections, but the syslog-sink-connector that saves data to the PostgreSQL database cannot establish a secure connection. Although the connector appears to be set up for TLS, PostgreSQL returns the error `connection requires a valid client certificate`, causing the connector to fall back to a non-secure connection. This situation is currently under investigation.
-
 #### How to disable non-secure connections on PostgreSQL:
-Keep in mind that at the current date of writing, if you disable non-secure connections on the PostgreSQL server the syslog-sink-connector will fail. Just to be clear, you can still connect to the database using a secure connection, it's just the syslog-sink-connector that will fail. Nevertheless, as this is an important improvement for the future, please find below the details to disable non-secure connections on the PostgreSQL server.
-
 Add the following code into the [postgres-values.yaml](manifests/postgres-values.yaml) file:
 ```
 primary:
