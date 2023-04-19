@@ -58,7 +58,7 @@ Keep in mind that at the current date of writing, if you disable non-secure conn
 Add the following code into the [postgres-values.yaml](manifests/postgres-values.yaml) file:
 ```
 primary:
-  kubepgHbaConfiguration: |-
+  pgHbaConfiguration: |-
     hostssl     all             all             0.0.0.0/0               cert
     hostssl     all             all             ::/0                    cert
 ```
