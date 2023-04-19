@@ -9,10 +9,6 @@ primary:
     nodePorts:
       postgresql: 30902
   
-  pgHbaConfiguration: |-
-    hostssl     all             all             0.0.0.0/0               cert
-    hostssl     all             all             ::/0                    cert
-
 tls:
   enabled: true
   certificatesSecret: postgres-pkcs12
