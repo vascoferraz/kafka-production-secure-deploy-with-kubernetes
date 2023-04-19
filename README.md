@@ -88,4 +88,5 @@ Also, the syslog source connector is adding a termination character \u0000 at th
 
 ## Additional notes
 1. Currently, the [install](scripts/install.sh) script only supports the [scenario](assets/certs/single-cert/README.md) that creates one server certificate for all Confluent component services. The other [scenario](assets/certs/component-certs/README.md), which uses one server certificate per Confluent component service, is not yet supported.
-2. Most of the passwords are visible in the code just to be easier to understand the project. However, keep in mind that you should use a vault to manage sensitive information.
+2. The PostgreSQL uses a dedicated certificate and key, but the CA is the same as the one used by the Confluent component services.
+3. Most of the passwords are visible in the code just to be easier to understand the project. However, keep in mind that you should use a vault to manage sensitive information.
