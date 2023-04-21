@@ -4,13 +4,13 @@
 export TUTORIAL_HOME="./.."
 
 # Build custom Kafka Broker image
-docker build -t confluentinc/cp-server-vf:7.3.0 $TUTORIAL_HOME/docker-images/kafka
+docker build -t confluentinc/cp-server-vf:7.3.3 $TUTORIAL_HOME/docker-images/kafka
 
 # Build custom Kafka Connect image
-docker build -t confluentinc/cp-server-connect-vf:7.3.0 $TUTORIAL_HOME/docker-images/connect
+docker build -t confluentinc/cp-server-connect-vf:7.3.3 $TUTORIAL_HOME/docker-images/connect
 
 # Build custom Schema Registry image
-docker build -t confluentinc/cp-schema-registry-vf:7.3.0 $TUTORIAL_HOME/docker-images/schema-registry
+docker build -t confluentinc/cp-schema-registry-vf:7.3.3 $TUTORIAL_HOME/docker-images/schema-registry
 
 # Update helm repositories
 helm repo update
