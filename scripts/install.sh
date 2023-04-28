@@ -159,5 +159,5 @@ kubectl create secret generic postgres-pkcs12 \
 
 # Deploy PostgreSQL container
 helm repo add bitnami https://charts.bitnami.com/bitnami
-helm upgrade --install postgresql bitnami/postgresql --version 12.3.1 -f ./../manifests/postgres-values.yaml
+helm upgrade --install postgresql bitnami/postgresql --version 12.4.2 -f ./../manifests/postgres-values.yaml
 kubectl wait --for=condition=Ready pod/postgresql-0 --timeout=60s
