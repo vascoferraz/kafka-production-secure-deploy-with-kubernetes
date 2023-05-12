@@ -70,7 +70,7 @@ host     all             all        ::1/128                      md5
 ```
 
 ## Syslog use case
-Once the Kafka cluster has been deployed on the local machine, it is advisable to adjust the permissions of both scripts to grant them executable permissions before proceeding with the deployment of the syslog use case.
+Once the Kafka cluster has been deployed on the local machine, and before proceeding with the deployment of the syslog use case, it is necessary to adjust the permissions of both scripts to grant them execute permissions.
 ```sh
 cd usecases/syslog
 chmod +x deploy-syslog.sh
