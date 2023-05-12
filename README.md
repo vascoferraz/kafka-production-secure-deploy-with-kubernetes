@@ -70,10 +70,15 @@ host     all             all        ::1/128                      md5
 ```
 
 ## Syslog use case
-After deploying the Kafka cluster on your local machine you are ready to deploy the syslog use case.
+Once the Kafka cluster has been deployed on the local machine, it is advisable to adjust the permissions of both scripts to grant them executable permissions before proceeding with the deployment of the syslog use case.
 ```sh
 cd usecases/syslog
-./deploy-syslog.sh 
+chmod +x deploy-syslog.sh
+chmod +x teardown-syslog.sh
+```
+
+```sh
+./deploy-syslog.sh
 ```
 
 To tear down the syslog use case run the tear down script
