@@ -77,11 +77,12 @@ chmod +x deploy-syslog.sh
 chmod +x teardown-syslog.sh
 ```
 
+Deploy the syslog use case:
 ```sh
 ./deploy-syslog.sh
 ```
 
-To tear down the syslog use case run the tear down script
+Tear down the syslog use case:
 ```sh
 ./teardown-syslog.sh
 ```
