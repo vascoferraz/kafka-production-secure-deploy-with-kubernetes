@@ -2,15 +2,21 @@
 This is an excerpt from one of the official Confluent [repositories](https://github.com/confluentinc/confluent-kubernetes-examples), regarding the [production-secure-deploy](https://github.com/confluentinc/confluent-kubernetes-examples/tree/master/security/production-secure-deploy) which I added a few more features and tools, like a PostgreSQL database, Kafka-UI and a syslog generator.
 
 ## Deploy and tear down the environment
-To deploy the Kafka cluster on your local machine just run the following script:
+To deploy the Kafka cluster on your local machine just run the following script, but before proceeding with the deployment of the Kafka cluster, it is necessary to adjust the permissions of both scripts (deploy-syslog and teardown-syslog) to grant them execute permissions.
+
 ```sh
 cd scripts
+chmod +x install.sh
+chmod +x uninstall.sh
+```
+
+To deploy the Kafka cluster execute the install script:
+```sh
 ./install.sh  
  ```
 
- To tear down the entire cluster run the uninstall script:
+ To tear down the Kafka cluster execute the uninstall script:
 ```sh
-cd scripts
 ./uninstall.sh 
  ```
 
@@ -70,7 +76,7 @@ host     all             all        ::1/128                      md5
 ```
 
 ## Syslog use case
-Once the Kafka cluster has been deployed on the local machine, and before proceeding with the deployment of the syslog use case, it is necessary to adjust the permissions of both scripts to grant them execute permissions.
+Once the Kafka cluster has been deployed on the local machine, and before proceeding with the deployment of the syslog use case, it is necessary to adjust the permissions of both scripts ([deploy-syslog](usecases/syslog/deploy-syslog.sh) and [teardown-syslog](usecases/syslog/teardown-syslog.sh)) to grant them execute permissions.
 ```sh
 cd usecases/syslog
 chmod +x deploy-syslog.sh
