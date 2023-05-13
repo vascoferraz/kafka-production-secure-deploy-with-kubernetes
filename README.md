@@ -1,8 +1,8 @@
 ## Introduction
 This is an excerpt from one of the official Confluent [repositories](https://github.com/confluentinc/confluent-kubernetes-examples), regarding the [production-secure-deploy](https://github.com/confluentinc/confluent-kubernetes-examples/tree/master/security/production-secure-deploy) which I added a few more features and tools, like a PostgreSQL database, Kafka-UI and a syslog generator.
 
-## Deploy and tear down the environment
-To deploy the Kafka cluster on your local machine just run the following script, but before proceeding with the deployment of the Kafka cluster, it is necessary to adjust the permissions of both scripts (deploy-syslog and teardown-syslog) to grant them execute permissions.
+## Deploy and tear down the Kafka cluster
+To deploy and tear down the Kafka cluster on your local machine just run the following scripts, but before proceeding with the deployment of the Kafka cluster, it is necessary to adjust the permissions of both scripts (deploy-syslog and teardown-syslog) to grant them execute permissions.
 
 ```sh
 cd scripts
