@@ -17,6 +17,7 @@
   "error.path": "/tmp/media/nfs/csv/error/",
   "halt.on.error": "false",
   "input.file.pattern": "sample.csv",
+  "empty.poll.wait.ms": 30000,
   "csv.first.row.as.header": "true",
   "csv.null.field.indicator": "EMPTY_SEPARATORS",
   "schema.generation.enabled": "true",
