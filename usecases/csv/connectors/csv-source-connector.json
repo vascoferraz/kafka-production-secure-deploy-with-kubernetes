@@ -19,6 +19,6 @@
   "input.file.pattern": "sample.csv",
   "csv.first.row.as.header": "true",
   "csv.null.field.indicator": "EMPTY_SEPARATORS",
-  "schema.generation.enabled": "false",
+  "schema.generation.enabled": "true",
   "schema.generation.key.fields": "email"
 }
