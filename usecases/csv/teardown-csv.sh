@@ -13,10 +13,6 @@ kubectl exec -it kafka-0 -c kafka -- kafka-topics --delete --bootstrap-server ka
 # Delete csv source connector
 kubectl exec -it connect-0 -c connect -- curl -s -k -X DELETE -H 'Content-Type:application/json' https://connect-0.connect.confluent.svc.cluster.local:8083/connectors/$SOURCE_CONNECTOR -u testadmin:testadmin
 
-# Delete csv key schema
-kubectl exec -it schemaregistry-0 -c schemaregistry -- curl -k -X DELETE -H "Content-Type: application/vnd.schemaregistry.v1+json" https://localhost:8081/subjects/csv-key --user sr:sr-secret
-kubectl exec -it schemaregistry-0 -c schemaregistry -- curl -k -X DELETE -H "Content-Type: application/vnd.schemaregistry.v1+json" https://localhost:8081/subjects/csv-key/?permanent=true --user sr:sr-secret
-
 # Delete csv value schema
 kubectl exec -it schemaregistry-0 -c schemaregistry -- curl -k -X DELETE -H "Content-Type: application/vnd.schemaregistry.v1+json" https://localhost:8081/subjects/csv-value --user sr:sr-secret
 kubectl exec -it schemaregistry-0 -c schemaregistry -- curl -k -X DELETE -H "Content-Type: application/vnd.schemaregistry.v1+json" https://localhost:8081/subjects/csv-value/?permanent=true --user sr:sr-secret
