@@ -12,11 +12,13 @@ docker build -t confluentinc/cp-server-connect-vf:7.4.0 $TUTORIAL_HOME/docker-im
 # Build custom Schema Registry image
 docker build -t confluentinc/cp-schema-registry-vf:7.4.0 $TUTORIAL_HOME/docker-images/schema-registry
 
-# Update helm repositories
+# Add and update helm repositories
+helm repo add confluentinc https://packages.confluent.io/helm
+helm repo add kafka-ui https://provectus.github.io/kafka-ui
+helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 
 # Deploy Confluent for Kubernetes
-helm repo add confluentinc https://packages.confluent.io/helm
 kubectl create namespace confluent
 kubectl config set-context --current --namespace=confluent
 helm upgrade --install operator confluentinc/confluent-for-kubernetes --namespace confluent
@@ -146,8 +148,7 @@ kubectl create secret generic kafkaui-pkcs12 \
     --from-file=truststore.p12=$TUTORIAL_HOME/assets/certs/generated/truststore.p12
 
 # Deploy Kafka UI container
-helm repo add kafka-ui https://provectus.github.io/kafka-ui
-helm upgrade --install kafka-ui kafka-ui/kafka-ui --version 0.7.0 -f ./../manifests/kafkaui-values.yaml
+helm upgrade --install kafka-ui kafka-ui/kafka-ui --version 0.7.0 -f $TUTORIAL_HOME/manifests/kafkaui-values.yaml
 pod_name=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep kafka-ui)
 kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
 
@@ -158,6 +159,9 @@ kubectl create secret generic postgres-pkcs12 \
     --from-file=ca.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem
 
 # Deploy PostgreSQL container
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm upgrade --install postgresql bitnami/postgresql --version 12.4.2 -f ./../manifests/postgres-values.yaml
+helm upgrade --install postgresql bitnami/postgresql --version 12.4.2 -f $TUTORIAL_HOME/manifests/postgres-values.yaml
 kubectl wait --for=condition=Ready pod/postgresql-0 --timeout=60s
+
+# Deploy MySQL container
+helm upgrade --install mysql bitnami/mysql --version 9.9.1 -f $TUTORIAL_HOME/manifests/mysql-values.yaml
+kubectl wait --for=condition=Ready pod/mysql-0 --timeout=60s

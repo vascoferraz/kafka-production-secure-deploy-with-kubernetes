@@ -23,3 +23,4 @@ helm delete test-ldap
 helm delete operator
 helm delete kafka-ui
 helm delete postgresql
+helm delete mysql
