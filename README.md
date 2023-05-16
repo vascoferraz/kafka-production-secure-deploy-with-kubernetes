@@ -46,7 +46,7 @@ psql "host=localhost port=30902 user=postgres password=change-me dbname=postgres
 #### From inside the PostgreSQL container without TLS:
 ```sh
 kubectl exec -it postgresql-0 -c postgresql -- bash
-psql "host=localhost port=5432 user=postgres password=change-me"
+psql "host=localhost port=5432 user=postgres password=change-me dbname=postgres"
 ```
 
 #### From inside the PostgreSQL container with TLS:
@@ -73,6 +73,20 @@ host     all             all             ::/0                    md5
 local    all             all                                     md5
 host     all             all        127.0.0.1/32                 md5
 host     all             all        ::1/128                      md5
+```
+
+## Access MySQL
+Currently, the MySQL instance is exposed via a NodePort and accessed using the following commands but first, make sure you are in the `scripts` folder:
+
+#### From your local machine without TLS:
+```sh
+mysql --host=localhost --port 30903 --database=mysql --user=mysql --password=change-me --protocol=tcp
+```
+
+#### From inside the MySQL container without TLS:
+```sh
+kubectl exec -it mysql-0 -c mysql -- bash
+mysql --host=localhost --port 3306 --database=mysql --user=mysql --password=change-me
 ```
 
 ## Syslog use case
