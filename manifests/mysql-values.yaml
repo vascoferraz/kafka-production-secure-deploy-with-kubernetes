@@ -1,0 +1,10 @@
+auth:
+  database: mysql
+  username: mysql
+  password: change-me
+
+primary:
+  service:
+    type: NodePort
+    nodePorts:
+      mysql: 30903
