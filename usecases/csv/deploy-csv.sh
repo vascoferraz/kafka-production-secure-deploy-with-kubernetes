@@ -9,6 +9,11 @@ export SINK_CONNECTOR="csv-sink-connector"
 kubectl apply -f $TUTORIAL_HOME/manifests/alpine-csv.yaml
 kubectl wait --for=condition=Ready pod/alpine-csv --timeout=60s
 
+# Copy CA and MySQL certificate and private key into the Kafka Connect pod
+kubectl cp $TUTORIAL_HOME/assets/certs/generated/mysql.pem confluent/connect-0:/tmp/ -c connect
+kubectl cp $TUTORIAL_HOME/assets/certs/generated/mysql-key.pem confluent/connect-0:/tmp/ -c connect
+kubectl cp $TUTORIAL_HOME/assets/certs/generated/ca.pem confluent/connect-0:/tmp/ -c connect
+
 # Create CSV Source Connector folders
 kubectl exec -it connect-0 -c connect -- mkdir -p /tmp/media/nfs/csv/unprocessed/
 kubectl exec -it connect-0 -c connect -- mkdir -p /tmp/media/nfs/csv/processed/

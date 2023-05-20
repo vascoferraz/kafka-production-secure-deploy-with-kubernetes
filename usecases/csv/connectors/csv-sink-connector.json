@@ -17,7 +17,7 @@
     "topics": "csv",
     "table.name.format": "csv",
     "pk.mode": "record_key",
-    "delete.enabled": "false",
+    "delete.enabled": false,
     "pk.fields": "email",
     "insert.mode": "upsert",
     "db.timezone": "UTC",

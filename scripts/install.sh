@@ -57,6 +57,15 @@ cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
 # Validate postgres certificate and SANs
 openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/postgres.pem -text -noout
 
+# Create mysql certificates with the appropriate SANs (SANs listed in mysql-domain.json)
+cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
+-ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
+-config=$TUTORIAL_HOME/assets/certs/single-cert/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certs/single-cert/mysql-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/mysql
+
+# Validate mysql certificate and SANs
+openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/mysql.pem -text -noout
+
 # Provide component TLS certificates
 kubectl create secret generic tls-group1 \
   --from-file=fullchain.pem=$TUTORIAL_HOME/assets/certs/generated/server.pem \
@@ -161,6 +170,12 @@ kubectl create secret generic postgres-pkcs12 \
 # Deploy PostgreSQL container
 helm upgrade --install postgresql bitnami/postgresql --version 12.4.2 -f $TUTORIAL_HOME/manifests/postgres-values.yaml
 kubectl wait --for=condition=Ready pod/postgresql-0 --timeout=60s
+
+# Create secret for MySQL container
+kubectl create secret generic mysql-pkcs12 \
+    --from-file=mysql.pem=$TUTORIAL_HOME/assets/certs/generated/mysql.pem \
+    --from-file=mysql-key.pem=$TUTORIAL_HOME/assets/certs/generated/mysql-key.pem \
+    --from-file=ca.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem
 
 # Deploy MySQL container
 helm upgrade --install mysql bitnami/mysql --version 9.9.1 -f $TUTORIAL_HOME/manifests/mysql-values.yaml
