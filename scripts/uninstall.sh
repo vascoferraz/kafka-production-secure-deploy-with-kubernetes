@@ -17,10 +17,10 @@ kubectl delete secret tls-group1
 kubectl delete secret rest-credential
 kubectl delete secret kafkaui-pkcs12
 kubectl delete secret postgres-pkcs12
-kubectl delete pod alpine-csv
-kubectl delete pod alpine-syslog
+kubectl delete secret mysql-pkcs12
 helm delete test-ldap
 helm delete operator
 helm delete kafka-ui
 helm delete postgresql
 helm delete mysql
+kubectl delete pvc data-mysql-0 data-postgresql-0 ldap-config-ldap-0 ldap-data-ldap-0

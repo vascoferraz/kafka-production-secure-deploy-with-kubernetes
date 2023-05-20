@@ -31,7 +31,7 @@ Currently, Control Center is exposed via a NodePort and accessed at the followin
 Currently, Kafka-UI is exposed via a NodePort and accessed at the following address: https://localhost:30901. The only available user is an administrator user with the following credentials: `admin:admin`
 
 ## Access PostgreSQL
-Currently, the PostgreSQL instance is exposed via a NodePort and accessed using the following commands but first, make sure you are in the `scripts` folder:
+Currently, the PostgreSQL instance is exposed via a NodePort and accessed using the following commands but first, make sure you are in the `scripts` folder.
 
 #### From your local machine without TLS:
 ```sh
@@ -76,17 +76,27 @@ host     all             all        ::1/128                      md5
 ```
 
 ## Access MySQL
-Currently, the MySQL instance is exposed via a NodePort and accessed using the following commands but first, make sure you are in the `scripts` folder:
+Currently, the MySQL instance is exposed via a NodePort and accessed using the following commands but first, make sure you are in the `scripts` folder.
 
 #### From your local machine without TLS:
 ```sh
-mysql --host=localhost --port 30903 --database=mysql --user=mysql --password=change-me --protocol=tcp
+mysql --host=localhost --port 30903 --database=mysql --user=mysql --password=change-me --protocol=tcp --ssl-mode=DISABLED 
+```
+
+#### From your local machine with TLS:
+```sh
+mysql --host=localhost --port 30903 --database=mysql --user=mysql --password=change-me --protocol=tcp --ssl-mode=VERIFY_IDENTITY --ssl-ca=./../assets/certs/generated/ca.pem --ssl-cert=./../assets/certs/generated/mysql.pem --ssl-key=./../assets/certs/generated/mysql-key.pem
 ```
 
 #### From inside the MySQL container without TLS:
 ```sh
 kubectl exec -it mysql-0 -c mysql -- bash
-mysql --host=localhost --port 3306 --database=mysql --user=mysql --password=change-me
+mysql --host=localhost --port 3306 --database=mysql --user=mysql --password=change-me --ssl-mode=DISABLED 
+```
+
+#### From inside the MySQL container with TLS:
+```sh
+mysql --host=localhost --port 3306 --database=mysql --user=mysql --password=change-me --protocol=tcp --ssl-mode=VERIFY_IDENTITY --ssl-ca=/mnt/sslcerts/ca.pem --ssl-cert=/mnt/sslcerts/mysql.pem --ssl-key=/mnt/sslcerts/mysql-key.pem
 ```
 
 ## Syslog use case
@@ -111,8 +121,8 @@ This use case is not complete. The value syslog schema has two fields with the t
 
 Also, the syslog source connector is adding a termination character \u0000 at the end of the message and PostgreSQL is not able to handle such chars. To solve this issue, a custom SMT was added to remove those characters of the fields `message` and `rawMessage`.
 
-
 ## Additional notes
 1. Currently, the [install](scripts/install.sh) script only supports the [scenario](assets/certs/single-cert/README.md) that creates one server certificate for all Confluent component services. The other [scenario](assets/certs/component-certs/README.md), which uses one server certificate per Confluent component service, is not yet supported.
-2. The PostgreSQL uses a dedicated certificate and key, but the CA is the same as the one used by the Confluent component services.
-3. Most of the passwords are visible in the code just to be easier to understand the project. However, keep in mind that you should use a vault to manage sensitive information.
+2. PostgreSQL uses a dedicated certificate and key, but the CA is the same as the one used by the Confluent component services.
+3. Like PostgreSQL, MySQL also uses a dedicated certificate and key, but the CA is the same as the one used by the Confluent component services. 
+4. Most of the passwords are visible in the code just to be easier to understand the project. However, keep in mind that you should use a vault to manage sensitive information.
