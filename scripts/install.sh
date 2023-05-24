@@ -168,7 +168,7 @@ kubectl create secret generic postgres-pkcs12 \
     --from-file=ca.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem
 
 # Deploy PostgreSQL container
-helm upgrade --install postgresql bitnami/postgresql --version 12.4.2 -f $TUTORIAL_HOME/manifests/postgres-values.yaml
+helm upgrade --install postgresql bitnami/postgresql --version 12.5.5 -f $TUTORIAL_HOME/manifests/postgres-values.yaml
 kubectl wait --for=condition=Ready pod/postgresql-0 --timeout=60s
 
 # Create secret for MySQL container
