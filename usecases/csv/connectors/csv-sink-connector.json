@@ -2,7 +2,7 @@
     "name": "csv-sink-connector",
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
     "tasks.max": "1",
-    "connection.url": "jdbc:mysql://mysql-0.mysql.confluent.svc.cluster.local:3306/mysql?user=mysql&password=change-me",
+    "connection.url": "jdbc:mysql://mysql-0.mysql.confluent.svc.cluster.local:3306/mysql?user=mysql&password=change-me&useSSL=true&requireSSL=true?verifyServerCertificate=false",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
     "parse.key": true,
     "value.converter": "io.confluent.connect.avro.AvroConverter",
