@@ -2,6 +2,7 @@
   "name": "syslog-source-connector",
   "connector.class": "io.confluent.connect.syslog.SyslogSourceConnector",
   "tasks.max": "1",
+  "key.converter": "org.apache.kafka.connect.storage.StringConverter",
   "value.converter": "io.confluent.connect.avro.AvroConverter",
   "value.converter.enhanced.avro.schema.support": true,
   "value.converter.schema.registry.url": "https://schemaregistry.confluent.svc.cluster.local:8081",
@@ -14,13 +15,15 @@
   "sasl.jaas.config": "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"kafka\" password=\"kafka-secret\";",
   "errors.tolerance": "all",
   "errors.log.enable": "true",
-  "transforms": "ReKey",
-  "transforms.ReKey.type": "org.apache.kafka.connect.transforms.InsertField$Key",
-  "transforms.ReKey.timestamp.field": "timestamp",
   "syslog.listener": "UDP",
   "syslog.port": "5559",
   "syslog.listen.address": "connect.confluent.svc.cluster.local",
   "topic": "syslog",
   "errors.deadletterqueue.context.headers.enable": "true",
-  "errors.deadletterqueue.topic.name": "syslog_dlq"
+  "errors.deadletterqueue.topic.name": "syslog_dlq",
+  "transforms": "createKey,extractString",
+  "transforms.createKey.type": "org.apache.kafka.connect.transforms.ValueToKey",
+  "transforms.createKey.fields": "host",
+  "transforms.extractString.type": "org.apache.kafka.connect.transforms.ExtractField$Key",
+  "transforms.extractString.field": "host"
 }
