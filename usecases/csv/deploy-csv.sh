@@ -5,10 +5,6 @@ export TUTORIAL_HOME="./../../"
 export SOURCE_CONNECTOR="csv-source-connector"
 export SINK_CONNECTOR="csv-sink-connector"
 
-# Deploy alpine container for the csv use case
-kubectl apply -f $TUTORIAL_HOME/manifests/alpine-csv.yaml
-kubectl wait --for=condition=Ready pod/alpine-csv --timeout=60s
-
 # Create CSV Source Connector folders
 kubectl exec -it connect-0 -c connect -- mkdir -p /tmp/media/nfs/csv/unprocessed/
 kubectl exec -it connect-0 -c connect -- mkdir -p /tmp/media/nfs/csv/processed/
