@@ -1,0 +1,11 @@
+{
+    "name": "datagen-credit_cards",
+    "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
+    "tasks.max": "1",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false",
+    "kafka.topic": "credit_cards",
+    "quickstart": "credit_cards",
+    "max.interval": 1000 
+}
