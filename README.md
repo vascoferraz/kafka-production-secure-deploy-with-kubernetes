@@ -1,5 +1,5 @@
 ## Introduction
-This is an excerpt from one of the official Confluent [repositories](https://github.com/confluentinc/confluent-kubernetes-examples), regarding the [production-secure-deploy](https://github.com/confluentinc/confluent-kubernetes-examples/tree/master/security/production-secure-deploy) which I added a few more features and tools, like a PostgreSQL database, Kafka-UI and a syslog generator.
+This is an excerpt from one of the official Confluent [repositories](https://github.com/confluentinc/confluent-kubernetes-examples), regarding the [production-secure-deploy](https://github.com/confluentinc/confluent-kubernetes-examples/tree/master/security/production-secure-deploy) which I added a few more features and tools, like a PostgreSQL and a MySQL database, Kafka-UI and some production-like use cases.
 
 ## Deploy and tear down the Kafka cluster
 To deploy and tear down the Kafka cluster on your local machine just run the following scripts, but before proceeding with the deployment of the Kafka cluster, it is necessary to adjust the permissions of both scripts (deploy-syslog and teardown-syslog) to grant them execute permissions.
@@ -99,8 +99,15 @@ mysql --host=localhost --port 3306 --database=mysql --user=mysql --password=chan
 mysql --host=localhost --port 3306 --database=mysql --user=mysql --password=change-me --protocol=tcp --ssl-mode=VERIFY_IDENTITY --ssl-ca=/mnt/sslcerts/ca.pem --ssl-cert=/mnt/sslcerts/mysql.pem --ssl-key=/mnt/sslcerts/mysql-key.pem
 ```
 
-## Syslog use case
-Once the Kafka cluster has been deployed on the local machine, and before proceeding with the deployment of the syslog use case, it is necessary to adjust the permissions of both scripts ([deploy-syslog](usecases/syslog/deploy-syslog.sh) and [teardown-syslog](usecases/syslog/teardown-syslog.sh)) to grant them execute permissions.
+## Use cases
+Once the Kafka cluster has been deployed on the local machine, we are ready to deploy the use cases.
+
+#### Syslog use case
+The syslog use case uses a Python [script](docker-images/alpine-syslog/syslog_gen.py), that is running on Alpine container, to generate syslog messages. These messages are stored on the syslog topic and then persisted in PostgreSQL.
+
+Please find below the steps to deploy and teardown the syslog use case.
+
+Adjust the permissions of both scripts ([deploy-syslog](usecases/syslog/deploy-syslog.sh) and [teardown-syslog](usecases/syslog/teardown-syslog.sh)) to grant them execute permissions.
 ```sh
 cd usecases/syslog
 chmod +x deploy-syslog.sh
@@ -120,6 +127,51 @@ Tear down the syslog use case:
 This use case is not complete. The value syslog schema has two fields with the type `map`. At the time of this writing, the JDBC sink connector is not able to flat maps, so, one of the options is to add a KStream or kSQL to flat these two fields (`extension` and `structuredData`). This improvement will be added in the future but for now, these two fields are ignored.
 
 Also, the syslog source connector is adding a termination character \u0000 at the end of the message and PostgreSQL is not able to handle such chars. To solve this issue, a custom SMT was added to remove those characters of the fields `message` and `rawMessage`.
+
+#### CSV use case
+
+The csv use case uses a csv [file](usecases/csv/sample.csv) as the source of data. The data is stored on the csv topic and then persisted in MySQL.
+
+Please find below the steps to deploy and teardown the syslog use case.
+
+Adjust the permissions of both scripts ([deploy-csv](usecases/csv/deploy-csv.sh) and [teardown-csv](usecases/csv/teardown-csv.sh)) to grant them execute permissions.
+```sh
+cd usecases/csv
+chmod +x deploy-csv.sh
+chmod +x teardown-csv.sh
+```
+
+Deploy the csv use case:
+```sh
+./deploy-csv.sh
+```
+
+Tear down the csv use case:
+```sh
+./teardown-csv.sh
+```
+
+#### Datagen Credit Cards use case
+The datagen credit cards use case uses a source connector that generates random credit card data that is stored in the datagen-credit_cards topic.
+
+Please find below the steps to deploy and teardown the syslog use case.
+
+Adjust the permissions of both scripts ([deploy-datagen-credit_cards](usecases/datagen-credit_cards/deploy-datagen-credit_cards.sh) and [teardown-datagen-credit_cards](usecases/datagen-credit_cards/teardown-datagen-credit_cards.sh)) to grant them execute permissions.
+```sh
+cd usecases/datagen-credit_cards
+chmod +x deploy-datagen-credit_cards.sh
+chmod +x teardown-datagen-credit_cards.sh
+```
+
+Deploy the datagen credit cards use case:
+```sh
+./deploy-datagen-credit_cards.sh
+```
+
+Tear down the datagen credit cards use case:
+```sh
+./teardown-datagen-credit_cards.sh
+```
 
 ## Additional notes
 1. Currently, the [install](scripts/install.sh) script only supports the [scenario](assets/certs/single-cert/README.md) that creates one server certificate for all Confluent component services. The other [scenario](assets/certs/component-certs/README.md), which uses one server certificate per Confluent component service, is not yet supported.
