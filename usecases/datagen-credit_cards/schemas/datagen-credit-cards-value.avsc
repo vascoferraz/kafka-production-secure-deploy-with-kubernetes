@@ -1,0 +1,45 @@
+{
+    "type": "record",
+    "name": "CreditCard",
+    "namespace": "com.github.jcustenborder.kafka.connect.model",
+    "fields": [
+        {
+            "name": "card_id",
+            "type": {
+                "type": "int",
+                "arg.properties": {
+                    "iteration": {
+                        "start": 1
+                    }
+                }
+            }
+        },
+        {
+            "name": "card_number",
+            "type": {
+                "type": "string",
+                "arg.properties": {
+                    "regex": "(\\d{4}-){3}\\d{4}"
+                }
+            }
+        },
+        {
+            "name": "cvv",
+            "type": {
+                "type": "string",
+                "arg.properties": {
+                    "regex": "([0-9]{3})"
+                }
+            }
+        },
+        {
+            "name": "expiration_date",
+            "type": {
+                "type": "string",
+                "arg.properties": {
+                    "regex": "(0[1-9]|1[0-2])\/(23|24|25|26|27|28|29)"
+                }
+            }
+        }
+    ]
+}
