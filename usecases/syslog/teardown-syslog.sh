@@ -4,7 +4,7 @@
 export SOURCE_CONNECTOR="syslog-source-connector"
 export SINK_CONNECTOR="syslog-sink-connector"
 
-# Delete alpine pod
+# Delete Alpine pod
 kubectl delete pod alpine-syslog
 
 # Delete syslog topic

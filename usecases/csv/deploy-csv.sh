@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Set up environment variables
-export TUTORIAL_HOME="./../../"
 export SOURCE_CONNECTOR="csv-source-connector"
 export SINK_CONNECTOR="csv-sink-connector"
 
