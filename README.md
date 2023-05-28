@@ -103,9 +103,9 @@ mysql --host=localhost --port 3306 --database=mysql --user=mysql --password=chan
 Once the Kafka cluster has been deployed on the local machine, we are ready to deploy the use cases.
 
 #### Syslog use case
-The syslog use case uses a Python [script](docker-images/alpine-syslog/syslog_gen.py), that is running on Alpine container, to generate syslog messages. These messages are stored on the syslog topic and then persisted in PostgreSQL.
+The `syslog` use case uses a Python [script](docker-images/alpine-syslog/syslog_gen.py), that is running on Alpine container, to generate syslog messages. These messages are stored on the `syslog` topic and then persisted in PostgreSQL.
 
-Please find below the steps to deploy and teardown the syslog use case.
+Please find below the steps to deploy and teardown the `syslog` use case.
 
 Adjust the permissions of both scripts ([deploy-syslog](usecases/syslog/deploy-syslog.sh) and [teardown-syslog](usecases/syslog/teardown-syslog.sh)) to grant them execute permissions.
 ```sh
@@ -114,12 +114,12 @@ chmod +x deploy-syslog.sh
 chmod +x teardown-syslog.sh
 ```
 
-Deploy the syslog use case:
+Deploy the `syslog` use case:
 ```sh
 ./deploy-syslog.sh
 ```
 
-Tear down the syslog use case:
+Tear down the `syslog` use case:
 ```sh
 ./teardown-syslog.sh
 ```
@@ -130,9 +130,9 @@ Also, the syslog source connector is adding a termination character \u0000 at th
 
 #### CSV use case
 
-The csv use case uses a csv [file](usecases/csv/sample.csv) as the source of data. The data is stored on the csv topic and then persisted in MySQL.
+The `csv` use case uses a csv [file](usecases/csv/sample.csv) as the source of data. The data is stored on the `csv` topic and then persisted in MySQL.
 
-Please find below the steps to deploy and teardown the syslog use case.
+Please find below the steps to deploy and teardown the `csv` use case.
 
 Adjust the permissions of both scripts ([deploy-csv](usecases/csv/deploy-csv.sh) and [teardown-csv](usecases/csv/teardown-csv.sh)) to grant them execute permissions.
 ```sh
@@ -141,20 +141,20 @@ chmod +x deploy-csv.sh
 chmod +x teardown-csv.sh
 ```
 
-Deploy the csv use case:
+Deploy the `csv` use case:
 ```sh
 ./deploy-csv.sh
 ```
 
-Tear down the csv use case:
+Tear down the `csv` use case:
 ```sh
 ./teardown-csv.sh
 ```
 
 #### Datagen Credit Cards use case
-The datagen credit cards use case uses a source connector that generates random credit card data that is stored in the datagen-credit_cards topic.
+The `datagen credit cards` use case utilizes the [Datagen Source Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-datagen/) that generates random credit card data that is stored in the `datagen-credit_cards` topic. Four fields are generated: `card_id`, `card_number`, `cvv`, and `expiration_date`. The `card_id` is an incremental number that starts at 1. The `card_number` is a random number ranging from `0000-0000-0000-0000` to `9999-9999-9999-9999`. The `cvv` is a random number ranging from `000` to `999`. Lastly, the `expiration_date` begins at 01/23 and ends at 12/29.
 
-Please find below the steps to deploy and teardown the syslog use case.
+Please find below the steps to deploy and teardown the `datagen credit` cards use case.
 
 Adjust the permissions of both scripts ([deploy-datagen-credit_cards](usecases/datagen-credit_cards/deploy-datagen-credit_cards.sh) and [teardown-datagen-credit_cards](usecases/datagen-credit_cards/teardown-datagen-credit_cards.sh)) to grant them execute permissions.
 ```sh
@@ -163,12 +163,12 @@ chmod +x deploy-datagen-credit_cards.sh
 chmod +x teardown-datagen-credit_cards.sh
 ```
 
-Deploy the datagen credit cards use case:
+Deploy the `datagen credit cards` use case:
 ```sh
 ./deploy-datagen-credit_cards.sh
 ```
 
-Tear down the datagen credit cards use case:
+Tear down the `datagen credit cards` use case:
 ```sh
 ./teardown-datagen-credit_cards.sh
 ```
