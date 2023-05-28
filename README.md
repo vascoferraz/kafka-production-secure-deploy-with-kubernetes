@@ -103,7 +103,7 @@ mysql --host=localhost --port 3306 --database=mysql --user=mysql --password=chan
 Once the Kafka cluster has been deployed on the local machine, we are ready to deploy the use cases.
 
 #### Syslog use case
-The `syslog` use case uses a Python [script](docker-images/alpine-syslog/syslog_gen.py), that is running on Alpine container, to generate syslog messages. These messages are stored on the syslog topic and then persisted in PostgreSQL.
+The `syslog` use case uses a Python [script](docker-images/alpine-syslog/syslog_gen.py), that is running on Alpine container, to generate syslog messages. These messages are stored on the `syslog` topic and then persisted in PostgreSQL.
 
 Please find below the steps to deploy and teardown the `syslog` use case.
 
@@ -130,7 +130,7 @@ Also, the syslog source connector is adding a termination character \u0000 at th
 
 #### CSV use case
 
-The `csv` use case uses a csv [file](usecases/csv/sample.csv) as the source of data. The data is stored on the csv topic and then persisted in MySQL.
+The `csv` use case uses a csv [file](usecases/csv/sample.csv) as the source of data. The data is stored on the `csv` topic and then persisted in MySQL.
 
 Please find below the steps to deploy and teardown the `csv` use case.
 
@@ -152,7 +152,7 @@ Tear down the `csv` use case:
 ```
 
 #### Datagen Credit Cards use case
-The `datagen credit cards` use case utilizes the [Datagen Source Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-datagen/) that generates random credit card data that is stored in the datagen-credit_cards topic. Four fields are generated: `card_id`, `card_number`, `cvv`, and `expiration_date`. The `card_id` is an incremental number that starts at 1. The `card_number` is a random number ranging from `0000-0000-0000-0000` to `9999-9999-9999-9999`. The `cvv` is a random number ranging from `000` to `999`. Lastly, the `expiration_date` begins at 01/23 and ends at 12/29.
+The `datagen credit cards` use case utilizes the [Datagen Source Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-datagen/) that generates random credit card data that is stored in the `datagen-credit_cards` topic. Four fields are generated: `card_id`, `card_number`, `cvv`, and `expiration_date`. The `card_id` is an incremental number that starts at 1. The `card_number` is a random number ranging from `0000-0000-0000-0000` to `9999-9999-9999-9999`. The `cvv` is a random number ranging from `000` to `999`. Lastly, the `expiration_date` begins at 01/23 and ends at 12/29.
 
 Please find below the steps to deploy and teardown the `datagen credit` cards use case.
 
