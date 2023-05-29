@@ -21,7 +21,7 @@ kubectl exec -it connect-0 -c connect -- curl -s -k -X DELETE -H 'Content-Type:a
 kubectl exec -it connect-0 -c connect -- curl -s -k -X DELETE -H 'Content-Type:application/json' https://connect-0.connect.confluent.svc.cluster.local:8083/connectors/$SINK_CONNECTOR -u testadmin:testadmin
 
 # Remove syslog value schema file from the Kafka Connect pod
-kubectl exec -it connect-0 -c connect -- rm /tmp/tmp/syslog-value.avsc
+kubectl exec -it connect-0 -c connect -- rm /tmp/syslog-value.avsc
 
 # Delete syslog value schema
 kubectl exec -it schemaregistry-0 -c schemaregistry -- curl -k -X DELETE -H "Content-Type: application/vnd.schemaregistry.v1+json" https://localhost:8081/subjects/syslog-value --user sr:sr-secret
