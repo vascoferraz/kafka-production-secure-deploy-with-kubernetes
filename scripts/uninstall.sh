@@ -23,4 +23,4 @@ helm delete operator
 helm delete kafka-ui
 helm delete postgresql
 helm delete mysql
-kubectl delete pvc data-mysql-0 data-postgresql-0 ldap-config-ldap-0 ldap-data-ldap-0
+kubectl delete pvc data-postgresql-0  data-mysql-0 data-mariadb-0 ldap-config-ldap-0 ldap-data-ldap-0
