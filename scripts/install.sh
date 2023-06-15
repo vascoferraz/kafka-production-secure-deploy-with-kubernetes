@@ -180,3 +180,7 @@ kubectl create secret generic mysql-pkcs12 \
 # Deploy MySQL container
 helm upgrade --install mysql bitnami/mysql --version 9.10.4 -f $TUTORIAL_HOME/manifests/mysql-values.yaml
 kubectl wait --for=condition=Ready pod/mysql-0 --timeout=60s
+
+# Deploy MariaDB container
+helm upgrade --install mariadb bitnami/mariadb --version 12.2.5 -f $TUTORIAL_HOME/manifests/mariadb-values.yaml
+kubectl wait --for=condition=Ready pod/mariadb-0 --timeout=60s
