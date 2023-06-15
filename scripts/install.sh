@@ -178,5 +178,5 @@ kubectl create secret generic mysql-pkcs12 \
     --from-file=ca.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem
 
 # Deploy MySQL container
-helm upgrade --install mysql bitnami/mysql --version 9.10.1 -f $TUTORIAL_HOME/manifests/mysql-values.yaml
+helm upgrade --install mysql bitnami/mysql --version 9.10.4 -f $TUTORIAL_HOME/manifests/mysql-values.yaml
 kubectl wait --for=condition=Ready pod/mysql-0 --timeout=60s
