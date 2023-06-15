@@ -2,6 +2,7 @@
 
 # Set up environment variables
 export SOURCE_CONNECTOR="datagen-credit_cards-source-connector"
+export SINK_CONNECTOR="datagen-credit_cards-sink-connector"
 
 # Delete datagen-credit_cards topic
 kubectl exec -it kafka-0 -c kafka -- kafka-topics --delete --bootstrap-server kafka.confluent.svc.cluster.local:9092 --command-config /opt/confluentinc/etc/kafka/kafka.properties --topic datagen-credit_cards
