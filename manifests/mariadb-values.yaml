@@ -1,0 +1,13 @@
+auth:
+  database: mariadb
+  username: mariadb
+  password: change-me
+
+primary:
+  service:
+    type: NodePort
+    nodePorts:
+      mysql: 30904
+      
+image:
+  debug: true
