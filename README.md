@@ -80,7 +80,7 @@ Currently, the MySQL instance is exposed via a NodePort and accessed using the f
 
 #### From your local machine without TLS:
 ```sh
-mysql --host=localhost --port 30903 --database=mysql --user=mysql --password=change-me --protocol=tcp --ssl-mode=DISABLED 
+mysql --host=localhost --port 30903 --database=mysql --user=mysql --password=change-me --protocol=tcp --ssl-mode=DISABLED
 ```
 
 #### From your local machine with TLS:
@@ -91,12 +91,26 @@ mysql --host=localhost --port 30903 --database=mysql --user=mysql --password=cha
 #### From inside the MySQL container without TLS:
 ```sh
 kubectl exec -it mysql-0 -c mysql -- bash
-mysql --host=localhost --port 3306 --database=mysql --user=mysql --password=change-me --ssl-mode=DISABLED 
+mysql --host=localhost --port 3306 --database=mysql --user=mysql --password=change-me --ssl-mode=DISABLED
 ```
 
 #### From inside the MySQL container with TLS:
 ```sh
 mysql --host=localhost --port 3306 --database=mysql --user=mysql --password=change-me --protocol=tcp --ssl-mode=VERIFY_IDENTITY --ssl-ca=/mnt/sslcerts/ca.pem --ssl-cert=/mnt/sslcerts/mysql.pem --ssl-key=/mnt/sslcerts/mysql-key.pem
+```
+
+## Access MariaDB
+Currently, the MariaDB instance is exposed via a NodePort and accessed using the following commands but first, make sure you are in the `scripts` folder.
+
+#### From your local machine without TLS:
+```sh
+mysql --host=localhost --port 30904 --database=mariadb --user=mariadb --password=change-me --protocol=tcp
+```
+
+#### From inside the MariaDB container without TLS:
+```sh
+kubectl exec -it mariadb-0 - mariadb -- bash
+mysql --host=localhost --port 3306 --database=mariadb --user=mariadb --password=change-me
 ```
 
 ## Use cases
@@ -152,7 +166,7 @@ Tear down the `csv` use case:
 ```
 
 #### Datagen Credit Cards use case
-The `datagen credit cards` use case utilizes the [Datagen Source Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-datagen/) that generates random credit card data that is stored in the `datagen-credit_cards` topic. Four fields are generated: `card_id`, `card_number`, `cvv`, and `expiration_date`. The `card_id` is an incremental number that starts at 1. The `card_number` is a random number ranging from `0000-0000-0000-0000` to `9999-9999-9999-9999`. The `cvv` is a random number ranging from `000` to `999`. Lastly, the `expiration_date` begins at 01/23 and ends at 12/29.
+The `datagen credit cards` use case utilizes the [Datagen Source Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-datagen/) that generates random credit card data that is stored in the `datagen-credit_cards` topic. Four fields are generated: `card_id`, `card_number`, `cvv`, and `expiration_date`. The `card_id` is an incremental number that starts at 1. The `card_number` is a random number ranging from `0000-0000-0000-0000` to `9999-9999-9999-9999`. The `cvv` is a random number ranging from `000` to `999`. Lastly, the `expiration_date` begins at 01/23 and ends at 12/29. Then, a sink connector is used to persist this data in a table on the MariaDB instance.
 
 Please find below the steps to deploy and teardown the `datagen credit` cards use case.
 
