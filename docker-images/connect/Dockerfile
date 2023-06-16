@@ -17,6 +17,9 @@ RUN confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.6.0
 # Download the JDBC Type 4 driver for MySQL
 RUN curl https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.0.33/mysql-connector-j-8.0.33.jar > /usr/share/confluent-hub-components/confluentinc-kafka-connect-jdbc/lib/mysql-connector-j-8.0.33.jar
 
+# Download the JDBC Type 4 driver for MariaDB
+RUN curl https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.1.4/mariadb-java-client-3.1.4.jar > /usr/share/confluent-hub-components/confluentinc-kafka-connect-jdbc/lib/mariadb-java-client-3.1.4.jar 
+        
 # Install vim
 RUN yum -y install vim
 
