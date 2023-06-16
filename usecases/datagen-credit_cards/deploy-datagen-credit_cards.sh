@@ -8,7 +8,7 @@ export SINK_CONNECTOR="datagen-credit_cards-sink-connector"
 kubectl exec -it kafka-0 -c kafka -- kafka-topics --create --bootstrap-server kafka.confluent.svc.cluster.local:9092 --command-config /opt/confluentinc/etc/kafka/kafka.properties --topic datagen-credit_cards --replication-factor 3 --partitions 3
 
 # Create datagen-credit_cards table
-mysql --host=localhost --port 30904 --database=mariadb --user=mariadb --password=change-me --protocol=tcp -e "CREATE TABLE \`datagen-credit_cards\` (\`card_id\` BIGINT NOT NULL, \`card_number\` VARCHAR(256) NULL, \`cvv\` VARCHAR(256) NULL PRIMARY KEY, \`expiration_date\` VARCHAR(256) NULL);"
+mysql --host=localhost --port 30904 --database=mariadb --user=mariadb --password=change-me --protocol=tcp -e "CREATE TABLE \`datagen-credit_cards\` (\`card_id\` BIGINT NOT NULL PRIMARY KEY, \`card_number\` VARCHAR(256) NULL, \`cvv\` VARCHAR(256) NULL, \`expiration_date\` VARCHAR(256) NULL);"
 
 # Copy datagen-credit_cards value schema file into the Kafka Connect pod
 kubectl cp ./schemas/datagen-credit-cards-value.avsc confluent/connect-0:/tmp/ -c connect
