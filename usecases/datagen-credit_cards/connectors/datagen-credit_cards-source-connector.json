@@ -17,5 +17,5 @@
     "kafka.topic": "datagen-credit_cards",
     "schema.filename": "/tmp/datagen-credit-cards-value.avsc",
     "schema.keyfield": "card_id",
-    "max.interval": 1000 
+    "max.interval": 1000
 }
