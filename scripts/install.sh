@@ -14,7 +14,7 @@ docker build -t confluentinc/cp-schema-registry-vf:7.4.0 $TUTORIAL_HOME/docker-i
 
 # Add and update helm repositories
 helm repo add confluentinc https://packages.confluent.io/helm
-helm repo add kafka-ui https://provectus.github.io/kafka-ui
+helm repo add kafka-ui https://provectus.github.io/kafka-ui-charts
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 
@@ -157,7 +157,7 @@ kubectl create secret generic kafkaui-pkcs12 \
     --from-file=truststore.p12=$TUTORIAL_HOME/assets/certs/generated/truststore.p12
 
 # Deploy Kafka UI container
-helm upgrade --install kafka-ui kafka-ui/kafka-ui --version 0.7.0 -f $TUTORIAL_HOME/manifests/kafkaui-values.yaml
+helm upgrade --install kafka-ui kafka-ui/kafka-ui --version 0.7.1 -f $TUTORIAL_HOME/manifests/kafkaui-values.yaml
 pod_name=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep kafka-ui)
 kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
 
