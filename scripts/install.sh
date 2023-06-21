@@ -66,6 +66,15 @@ cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
 # Validate mysql certificate and SANs
 openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/mysql.pem -text -noout
 
+# Create mariadb certificates with the appropriate SANs (SANs listed in mariadb-domain.json)
+cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
+-ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
+-config=$TUTORIAL_HOME/assets/certs/single-cert/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certs/single-cert/mariadb-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/mariadb
+
+# Validate mariadb certificate and SANs
+openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/mariadb.pem -text -noout
+
 # Provide component TLS certificates
 kubectl create secret generic tls-group1 \
   --from-file=fullchain.pem=$TUTORIAL_HOME/assets/certs/generated/server.pem \
@@ -180,6 +189,12 @@ kubectl create secret generic mysql-pkcs12 \
 # Deploy MySQL container
 helm upgrade --install mysql bitnami/mysql --version 9.10.4 -f $TUTORIAL_HOME/manifests/mysql-values.yaml
 kubectl wait --for=condition=Ready pod/mysql-0 --timeout=60s
+
+# Create secret for MariaDB container
+kubectl create secret generic mariadb-pkcs12 \
+    --from-file=mariadb.pem=$TUTORIAL_HOME/assets/certs/generated/mariadb.pem \
+    --from-file=mariadb-key.pem=$TUTORIAL_HOME/assets/certs/generated/mariadb-key.pem \
+    --from-file=ca.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem
 
 # Deploy MariaDB container
 helm upgrade --install mariadb bitnami/mariadb --version 12.2.5 -f $TUTORIAL_HOME/manifests/mariadb-values.yaml

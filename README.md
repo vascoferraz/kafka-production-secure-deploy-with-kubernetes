@@ -96,6 +96,7 @@ mysql --host=localhost --port 3306 --database=mysql --user=mysql --password=chan
 
 #### From inside the MySQL container with TLS:
 ```sh
+kubectl exec -it mysql-0 -c mysql -- bash
 mysql --host=localhost --port 3306 --database=mysql --user=mysql --password=change-me --protocol=tcp --ssl-mode=VERIFY_IDENTITY --ssl-ca=/mnt/sslcerts/ca.pem --ssl-cert=/mnt/sslcerts/mysql.pem --ssl-key=/mnt/sslcerts/mysql-key.pem
 ```
 
@@ -104,13 +105,24 @@ Currently, the MariaDB instance is exposed via a NodePort and accessed using the
 
 #### From your local machine without TLS:
 ```sh
-mysql --host=localhost --port 30904 --database=mariadb --user=mariadb --password=change-me --protocol=tcp
+mysql --host=localhost --port 30904 --database=mariadb --user=mariadb --password=change-me --protocol=tcp --ssl-mode=DISABLED
+```
+
+#### From your local machine with TLS:
+```sh
+mysql --host=localhost --port 30904 --database=mariadb --user=mariadb --password=change-me --protocol=tcp --ssl-mode=VERIFY_IDENTITY --ssl-ca=./../assets/certs/generated/ca.pem --ssl-cert=./../assets/certs/generated/mariadb.pem --ssl-key=./../assets/certs/generated/mariadb-key.pem
 ```
 
 #### From inside the MariaDB container without TLS:
 ```sh
 kubectl exec -it mariadb-0 - mariadb -- bash
-mysql --host=localhost --port 3306 --database=mariadb --user=mariadb --password=change-me
+mysql --host=localhost --port 3306 --database=mariadb --user=mariadb --password=change-me --skip-ssl
+```
+
+#### From inside the MariaDB container with TLS:
+```sh
+kubectl exec -it mariadb-0 - mariadb -- bash
+mysql --host=localhost --port 3306 --database=mariadb --user=mariadb --password=change-me --protocol=tcp --ssl-verify-server-cert --ssl-ca=/mnt/sslcerts/ca.pem --ssl-cert=/mnt/sslcerts/mariadb.pem --ssl-key=/mnt/sslcerts/mariadb-key.pem
 ```
 
 ## Use cases

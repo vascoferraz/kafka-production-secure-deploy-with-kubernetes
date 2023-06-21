@@ -2,7 +2,7 @@
     "name": "datagen-credit_cards-sink-connector",
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
     "tasks.max": "1",
-    "connection.url": "jdbc:mariadb://mariadb-0.mariadb.confluent.svc.cluster.local:3306/mariadb?user=mariadb&password=change-me",
+    "connection.url": "jdbc:mariadb://mariadb-0.mariadb.confluent.svc.cluster.local:3306/mariadb?user=mariadb&password=change-me&sslMode=verify-full&serverSslCert=/mnt/sslcerts/cacerts.pem",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
     "parse.key": true,
     "value.converter": "io.confluent.connect.avro.AvroConverter",
