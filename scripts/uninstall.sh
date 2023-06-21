@@ -18,6 +18,7 @@ kubectl delete secret rest-credential
 kubectl delete secret kafkaui-pkcs12
 kubectl delete secret postgres-pkcs12
 kubectl delete secret mysql-pkcs12
+kubectl delete secret mariadb-pkcs12
 helm delete test-ldap
 helm delete operator
 helm delete kafka-ui
