@@ -100,6 +100,9 @@ kubectl exec -it mysql-0 -c mysql -- bash
 mysql --host=localhost --port 3306 --database=mysql --user=mysql --password=change-me --protocol=tcp --ssl-mode=VERIFY_IDENTITY --ssl-ca=/mnt/sslcerts/ca.pem --ssl-cert=/mnt/sslcerts/mysql.pem --ssl-key=/mnt/sslcerts/mysql-key.pem
 ```
 
+#### How to disable non-secure connections on MySQL:
+To disable non-secure connections on MySQL, open the file [mysql-values.yaml](manifests/mysql-values.yaml) and change the configuration parameter `require_secure_transport` from `OFF` to `ON`.
+
 ## Access MariaDB
 Currently, the MariaDB instance is exposed via a NodePort and accessed using the following commands but first, make sure you are in the `scripts` folder.
 
@@ -124,6 +127,9 @@ mysql --host=localhost --port 3306 --database=mariadb --user=mariadb --password=
 kubectl exec -it mariadb-0 - mariadb -- bash
 mysql --host=localhost --port 3306 --database=mariadb --user=mariadb --password=change-me --protocol=tcp --ssl-verify-server-cert --ssl-ca=/mnt/sslcerts/ca.pem --ssl-cert=/mnt/sslcerts/mariadb.pem --ssl-key=/mnt/sslcerts/mariadb-key.pem
 ```
+
+#### How to disable non-secure connections on MariaDB:
+To disable non-secure connections on MariaDB, open the file [mariadb-values.yaml](manifests/mariadb-values.yaml) and change the configuration parameter `require_secure_transport` from `OFF` to `ON`.
 
 ## Use cases
 Once the Kafka cluster has been deployed on the local machine, we are ready to deploy the use cases.
