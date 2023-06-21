@@ -26,7 +26,7 @@ pod_name=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | gr
 kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
 
 # Deploy OpenLDAP
-helm upgrade --install -f $TUTORIAL_HOME/assets/openldap/ldaps-rbac.yaml test-ldap $TUTORIAL_HOME/assets/openldap --namespace confluent
+helm upgrade --install test-ldap $TUTORIAL_HOME/assets/openldap -f $TUTORIAL_HOME/assets/openldap/ldaps-rbac.yaml --namespace confluent
 kubectl wait --for=condition=Ready pod/ldap-0 --timeout=60s
 for i in 1 2 3 4 5; do kubectl --namespace confluent exec -it ldap-0 -- ldapsearch -LLL -x -H ldap://ldap.confluent.svc.cluster.local:389 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!' && break || sleep 15; done
 
