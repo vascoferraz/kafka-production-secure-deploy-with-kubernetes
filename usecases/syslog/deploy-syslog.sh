@@ -6,7 +6,7 @@ export SOURCE_CONNECTOR="syslog-source-connector"
 export SINK_CONNECTOR="syslog-sink-connector"
 
 # Build custom Alpine image
-docker build -t alpine-vf:3.18.0 $TUTORIAL_HOME/docker-images/alpine-syslog
+docker build -t alpine-vf:3.18.2 $TUTORIAL_HOME/docker-images/alpine-syslog
  
 # Deploy Alpine container for the syslog generator
 kubectl apply -f $TUTORIAL_HOME/manifests/alpine-syslog.yaml
