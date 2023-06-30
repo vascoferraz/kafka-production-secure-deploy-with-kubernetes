@@ -118,13 +118,13 @@ mysql --host=localhost --port 30904 --database=mariadb --user=mariadb --password
 
 #### From inside the MariaDB container without TLS:
 ```sh
-kubectl exec -it mariadb-0 - mariadb -- bash
+kubectl exec -it mariadb-0 -c mariadb -- bash
 mysql --host=localhost --port 3306 --database=mariadb --user=mariadb --password=change-me --skip-ssl
 ```
 
 #### From inside the MariaDB container with TLS:
 ```sh
-kubectl exec -it mariadb-0 - mariadb -- bash
+kubectl exec -it mariadb-0 -c mariadb -- bash
 mysql --host=localhost --port 3306 --database=mariadb --user=mariadb --password=change-me --protocol=tcp --ssl-verify-server-cert --ssl-ca=/mnt/sslcerts/ca.pem --ssl-cert=/mnt/sslcerts/mariadb.pem --ssl-key=/mnt/sslcerts/mariadb-key.pem
 ```
 
@@ -203,6 +203,17 @@ Deploy the `datagen credit cards` use case:
 Tear down the `datagen credit cards` use case:
 ```sh
 ./teardown-datagen-credit_cards.sh
+```
+
+## List all Access Control List (ACL)
+```sh
+kubectl exec -it kafka-0 -c kafka -- bash
+kafka-acls --list --bootstrap-server kafka.confluent.svc.cluster.local:9092 --command-config /opt/confluentinc/etc/kafka/kafka.properties
+```
+
+## List all Confluent Role-based Access Control (RBAC)
+```sh
+kubectl describe confluentrolebinding
 ```
 
 ## Additional notes
