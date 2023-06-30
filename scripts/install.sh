@@ -206,7 +206,3 @@ kubectl create secret generic mariadb-pkcs12 \
 # Deploy MariaDB container
 helm upgrade --install mariadb bitnami/mariadb --version 12.2.5 -f $TUTORIAL_HOME/manifests/mariadb-values.yaml
 kubectl wait --for=condition=Ready pod/mariadb-0 --timeout=60s
-
-
-
-ldapsearch -LLL -x -Z -H ldaps://ldap.confluent.svc.cluster.local:636 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!' -d 1
