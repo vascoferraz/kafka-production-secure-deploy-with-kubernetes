@@ -16,6 +16,7 @@ docker build -t confluentinc/cp-schema-registry-vf:7.4.0 $TUTORIAL_HOME/docker-i
 helm repo add confluentinc https://packages.confluent.io/helm
 helm repo add kafka-ui https://provectus.github.io/kafka-ui-charts
 helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add cetic https://cetic.github.io/helm-charts
 helm repo update
 
 # Deploy Confluent for Kubernetes
@@ -168,6 +169,12 @@ kubectl create secret generic kafkaui-pkcs12 \
 # Deploy Kafka UI container
 helm upgrade --install kafka-ui kafka-ui/kafka-ui --version 0.7.2 -f $TUTORIAL_HOME/manifests/kafkaui-values.yaml
 pod_name=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep kafka-ui)
+kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
+
+# Deploy phpLDAPadmin container
+helm upgrade --install phpldapadmin cetic/phpldapadmin --version 0.1.4  -f $TUTORIAL_HOME/manifests/phpldapadmin-values.yaml --set "image.repository=osixia/phpldapadmin,image.tag=0.9.0"
+kubectl patch service phpldapadmin -p '{"spec":{"ports":[{"name":"http","port":80,"nodePort":30910}]}}'
+pod_name=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep phpldapadmin)
 kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
 
 # Create secret for PostgreSQL container
