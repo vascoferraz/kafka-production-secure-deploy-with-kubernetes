@@ -22,6 +22,7 @@ kubectl delete secret mariadb-pkcs12
 helm delete test-ldap
 helm delete operator
 helm delete kafka-ui
+helm delete phpldapadmin
 helm delete postgresql
 helm delete mysql
 helm delete mariadb

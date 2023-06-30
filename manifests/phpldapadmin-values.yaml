@@ -1,0 +1,7 @@
+env:
+  PHPLDAPADMIN_LDAP_HOSTS: "#PYTHON2BASH:[{'ldap://ldap.confluent.svc.cluster.local:389': [{'server': [{'tls': False}]},{'login': [{'bind_id': 'cn=admin,dc=test,dc=com'}]}]}, {'ldaps://ldap.confluent.svc.cluster.local:636': [{'server': [{'tls': True}]},{'login': [{'bind_id': 'cn=admin,dc=test,dc=com'}]}]}]"
+  #PHPLDAPADMIN_HTTPS: "false"
+  #PHPLDAPADMIN_LDAP_HOSTS: "ldap://ldap.confluent.svc.cluster.local:389"
+
+service:
+  type: NodePort

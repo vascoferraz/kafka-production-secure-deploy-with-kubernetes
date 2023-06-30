@@ -16,6 +16,7 @@ docker build -t confluentinc/cp-schema-registry-vf:7.4.0 $TUTORIAL_HOME/docker-i
 helm repo add confluentinc https://packages.confluent.io/helm
 helm repo add kafka-ui https://provectus.github.io/kafka-ui-charts
 helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add cetic https://cetic.github.io/helm-charts
 helm repo update
 
 # Deploy Confluent for Kubernetes
@@ -170,6 +171,12 @@ helm upgrade --install kafka-ui kafka-ui/kafka-ui --version 0.7.2 -f $TUTORIAL_H
 pod_name=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep kafka-ui)
 kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
 
+# Deploy phpLDAPadmin container
+helm upgrade --install phpldapadmin cetic/phpldapadmin --version 0.1.4  -f $TUTORIAL_HOME/manifests/phpldapadmin-values.yaml --set "image.repository=osixia/phpldapadmin,image.tag=0.9.0"
+kubectl patch service phpldapadmin -p '{"spec":{"ports":[{"name":"http","port":80,"nodePort":30910}]}}'
+pod_name=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep phpldapadmin)
+kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
+
 # Create secret for PostgreSQL container
 kubectl create secret generic postgres-pkcs12 \
     --from-file=cert.pem=$TUTORIAL_HOME/assets/certs/generated/postgres.pem \
@@ -199,3 +206,7 @@ kubectl create secret generic mariadb-pkcs12 \
 # Deploy MariaDB container
 helm upgrade --install mariadb bitnami/mariadb --version 12.2.5 -f $TUTORIAL_HOME/manifests/mariadb-values.yaml
 kubectl wait --for=condition=Ready pod/mariadb-0 --timeout=60s
+
+
+
+ldapsearch -LLL -x -Z -H ldaps://ldap.confluent.svc.cluster.local:636 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!' -d 1
