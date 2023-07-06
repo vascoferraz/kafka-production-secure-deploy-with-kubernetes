@@ -31,11 +31,11 @@ spec:
         - name: LDAP_TLS_VERIFY_CLIENT
           value: try
         - name: LDAP_TLS_CRT_FILENAME
-          value: tls.crt
+          value: server.pem
         - name: LDAP_TLS_KEY_FILENAME
-          value: tls.key
+          value: server-key.pem
         - name: LDAP_TLS_CA_CRT_FILENAME
-          value: ca.crt
+          value: ca.pem
         - name: LDAP_TLS
           value: "true"
         {{- end }}

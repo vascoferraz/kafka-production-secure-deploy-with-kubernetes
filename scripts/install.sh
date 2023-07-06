@@ -26,11 +26,6 @@ helm upgrade --install operator confluentinc/confluent-for-kubernetes --namespac
 pod_name=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep confluent-operator)
 kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
 
-# Deploy OpenLDAP
-helm upgrade --install test-ldap $TUTORIAL_HOME/assets/openldap -f $TUTORIAL_HOME/assets/openldap/ldaps-rbac.yaml --namespace confluent
-kubectl wait --for=condition=Ready pod/ldap-0 --timeout=60s
-for i in 1 2 3 4 5; do kubectl --namespace confluent exec -it ldap-0 -- ldapsearch -LLL -x -H ldap://ldap.confluent.svc.cluster.local:389 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!' && break || sleep 15; done
-
 # Install libraries on Mac OS
 brew install cfssl
 
@@ -75,6 +70,18 @@ cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
 
 # Validate mariadb certificate and SANs
 openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/mariadb.pem -text -noout
+
+# Create secret with TLS certificates for the OpenLDAP container
+kubectl create secret generic ldap-sslcerts  \
+  --from-file=server.pem=$TUTORIAL_HOME/assets/certs/generated/server.pem \
+  --from-file=ca.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
+  --from-file=server-key.pem=$TUTORIAL_HOME/assets/certs/generated/server-key.pem \
+  --namespace confluent
+
+# Deploy OpenLDAP
+helm upgrade --install test-ldap $TUTORIAL_HOME/assets/openldap --namespace confluent
+kubectl wait --for=condition=Ready pod/ldap-0 --timeout=60s
+for i in 1 2 3 4 5; do kubectl --namespace confluent exec -it ldap-0 -- ldapsearch -LLL -x -H ldap://ldap.confluent.svc.cluster.local:389 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!' && break || sleep 15; done
 
 # Provide component TLS certificates
 kubectl create secret generic tls-group1 \
