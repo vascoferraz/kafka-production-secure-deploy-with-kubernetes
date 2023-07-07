@@ -13,6 +13,7 @@ kubectl delete -f $TUTORIAL_HOME/manifests/confluent-platform-production.yaml
 kubectl delete secret ksqldb-mds-client sr-mds-client connect-mds-client krp-mds-client c3-mds-client mds-client
 kubectl delete secret mds-token
 kubectl delete secret credential
+kubectl delete secret ldap-sslcerts
 kubectl delete secret tls-group1
 kubectl delete secret rest-credential
 kubectl delete secret kafkaui-pkcs12
