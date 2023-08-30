@@ -178,11 +178,21 @@ helm upgrade --install kafka-ui kafka-ui/kafka-ui --version 0.7.2 -f $TUTORIAL_H
 pod_name=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep kafka-ui)
 kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
 
+# Build custom phpLDAPadmin image
+docker build -t osixia/phpldapadmin-vf:0.9.0 --progress=plain -f $TUTORIAL_HOME/docker-images/phpldapadmin/Dockerfile ../
+
+# Restart phpLDAPadmin pod but only if it already exists
+if [ "$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep phpldapadmin)" != "" ]; then
+  kubectl rollout restart deployment phpldapadmin
+else
+  echo "Pod phpldapadmin does not exist."
+fi
+
 # Deploy phpLDAPadmin container
-helm upgrade --install phpldapadmin cetic/phpldapadmin --version 0.1.4  -f $TUTORIAL_HOME/manifests/phpldapadmin-values.yaml --set "image.repository=osixia/phpldapadmin,image.tag=0.9.0"
-kubectl patch service phpldapadmin -p '{"spec":{"ports":[{"name":"http","port":80,"nodePort":30910}]}}'
+helm upgrade --install phpldapadmin cetic/phpldapadmin --version 0.1.4  -f $TUTORIAL_HOME/manifests/phpldapadmin-values.yaml 
 pod_name=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep phpldapadmin)
 kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
+kubectl patch service phpldapadmin -p '{"spec":{"ports":[{"name":"https","port":443,"nodePort":30910}]}}'
 
 # Create secret for PostgreSQL container
 kubectl create secret generic postgres-pkcs12 \
