@@ -44,6 +44,15 @@ cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
 # Validate server certificate and SANs
 openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/server.pem -text -noout
 
+# Create phpldapadmin certificates with the appropriate SANs (SANs listed in phpldapadmin-domain.json)
+cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
+-ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
+-config=$TUTORIAL_HOME/assets/certs/single-cert/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certs/single-cert/phpldapadmin-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/phpldapadmin
+
+# Validate phpldapadmin certificate and SANs
+openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/phpldapadmin.pem -text -noout
+
 # Create postgres certificates with the appropriate SANs (SANs listed in postgres-domain.json)
 cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
 -ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
