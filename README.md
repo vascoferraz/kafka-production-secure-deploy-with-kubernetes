@@ -221,5 +221,5 @@ kubectl describe confluentrolebinding
 
 ## Additional notes
 1. Currently, the [install](scripts/install.sh) script only supports the [scenario](assets/certs/single-cert/README.md) that creates one server certificate for all Confluent component services. The other [scenario](assets/certs/component-certs/README.md), which uses one server certificate per Confluent component service, is not yet supported.
-2. PostgreSQL, MySQL, and MariaDB use their own certificates and keys, but they share the same CA as the one used by the Confluent component services.
+2. phpLDAPadmin, PostgreSQL, MySQL, and MariaDB use their own certificates and keys, but they share the same CA as the one used by the Confluent component services.
 3. Most of the passwords are visible in the code just to be easier to understand the project. However, keep in mind that you should use a vault to manage sensitive information.
