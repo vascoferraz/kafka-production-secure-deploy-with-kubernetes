@@ -30,6 +30,9 @@ Currently, Control Center is exposed via a NodePort and accessed at the followin
 ## Access Kafka-UI
 Currently, Kafka-UI is exposed via a NodePort and accessed at the following address: https://localhost:30901. The only available user is an administrator user with the following credentials: `admin:admin`
 
+## Access phpLDAPadmin
+Currently, phpLDAPadmin is exposed via a NodePort and can be accessed at the following address: https://localhost:30910. As of the time of writing, phpLDAPadmin is only able to access the non-secure version of the LDAP server, which is: `ldap://ldap.confluent.svc.cluster.local:389`. The user with administrator permissions of this LDAP server is the following: Login DN `cn=admin,dc=test,dc=com`. Password: `confluentrox`.
+
 ## Access PostgreSQL
 Currently, the PostgreSQL instance is exposed via a NodePort and accessed using the following commands but first, make sure you are in the `scripts` folder.
 
