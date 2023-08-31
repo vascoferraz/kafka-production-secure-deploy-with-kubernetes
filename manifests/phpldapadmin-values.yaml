@@ -1,6 +1,6 @@
 image:
   repository: osixia/phpldapadmin-vf
-  tag: 0.9.0
+  tag: 7.7.7
 
 env:
   PHPLDAPADMIN_LDAP_HOSTS: "#PYTHON2BASH:[{'ldap://ldap.confluent.svc.cluster.local:389': [{'server': [{'tls': False}]},{'login': [{'bind_id': 'cn=admin,dc=test,dc=com'}]}]}, {'ldaps://ldap.confluent.svc.cluster.local:636': [{'server': [{'tls': True}]},{'login': [{'bind_id': 'cn=admin,dc=test,dc=com'}]}]}]"
@@ -8,7 +8,12 @@ env:
   PHPLDAPADMIN_HTTPS_CRT_FILENAME: "phpldapadmin.pem"
   PHPLDAPADMIN_HTTPS_KEY_FILENAME: "phpldapadmin-key.pem"
   PHPLDAPADMIN_HTTPS_CA_CRT_FILENAME: "ca.pem"
-
+  PHPLDAPADMIN_LDAP_CLIENT_TLS: "true"
+  PHPLDAPADMIN_LDAP_CLIENT_TLS_REQCERT: "demand"  
+  PHPLDAPADMIN_LDAP_CLIENT_TLS_CA_CRT_FILENAME: "ca.pem"
+  PHPLDAPADMIN_LDAP_CLIENT_TLS_CRT_FILENAME: "server.pem"
+  PHPLDAPADMIN_LDAP_CLIENT_TLS_KEY_FILENAME: "server-key.pem"
+  
 service:
   type: NodePort
 

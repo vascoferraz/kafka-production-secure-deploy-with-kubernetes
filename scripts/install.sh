@@ -81,11 +81,19 @@ cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
 openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/mariadb.pem -text -noout
 
 # Create secret with TLS certificates for the OpenLDAP container
+kubectl delete secret ldap-sslcerts
 kubectl create secret generic ldap-sslcerts  \
   --from-file=server.pem=$TUTORIAL_HOME/assets/certs/generated/server.pem \
   --from-file=ca.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
   --from-file=server-key.pem=$TUTORIAL_HOME/assets/certs/generated/server-key.pem \
   --namespace confluent
+
+# Restart OpenLDAP pod but only if it already exists
+if [ "$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep ldap-0)" != "" ]; then
+  kubectl rollout restart deployment test-ldap
+else
+  echo "Pod test-ldap does not exist."
+fi
 
 # Deploy OpenLDAP
 helm upgrade --install test-ldap $TUTORIAL_HOME/assets/openldap --namespace confluent
