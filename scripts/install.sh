@@ -238,7 +238,7 @@ kubectl create secret generic mariadb-pkcs12 \
     --from-file=ca.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem
 
 # Deploy MariaDB container
-helm upgrade --install mariadb bitnami/mariadb --version 12.2.5 -f $TUTORIAL_HOME/manifests/mariadb-values.yaml
+helm upgrade --install mariadb bitnami/mariadb --version 13.1.2 -f $TUTORIAL_HOME/manifests/mariadb-values.yaml
 kubectl wait --for=condition=Ready pod/mariadb-0 --timeout=60s
 
 # Build and deploy Alpine container used for debug
