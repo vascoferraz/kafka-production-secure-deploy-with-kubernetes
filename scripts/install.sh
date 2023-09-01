@@ -240,3 +240,8 @@ kubectl create secret generic mariadb-pkcs12 \
 # Deploy MariaDB container
 helm upgrade --install mariadb bitnami/mariadb --version 12.2.5 -f $TUTORIAL_HOME/manifests/mariadb-values.yaml
 kubectl wait --for=condition=Ready pod/mariadb-0 --timeout=60s
+
+# Build and deploy Alpine container used for debug
+docker build -t alpine-debug:3.18.3 --progress=plain -f $TUTORIAL_HOME/docker-images/alpine-debug/Dockerfile ../
+kubectl apply -f $TUTORIAL_HOME/manifests/alpine-debug.yaml
+kubectl wait --for=condition=Ready pod/alpine-debug --timeout=60s

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alpine-debug
+  namespace: confluent
+spec:
+  containers:
+  - image: alpine-debug:3.18.3
+    command:
+      - /bin/sh
+      - "-c"
+      - "sleep 60m"
+    imagePullPolicy: IfNotPresent
+    name: alpine-debug
+  restartPolicy: Always
