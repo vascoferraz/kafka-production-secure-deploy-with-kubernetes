@@ -10,6 +10,7 @@ for rb in $(kubectl -n confluent get cfrb --no-headers -ojsonpath='{.items[*].me
 
 kubectl delete confluentrolebinding --all
 kubectl delete -f $TUTORIAL_HOME/manifests/confluent-platform-production.yaml
+kubectl delete -f $TUTORIAL_HOME/manifests/alpine-debug.yaml
 kubectl delete secret ksqldb-mds-client sr-mds-client connect-mds-client krp-mds-client c3-mds-client mds-client
 kubectl delete secret mds-token
 kubectl delete secret credential
