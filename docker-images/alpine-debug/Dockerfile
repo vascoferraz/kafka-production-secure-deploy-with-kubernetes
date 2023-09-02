@@ -14,5 +14,5 @@ RUN apk add openldap-clients
 # Install ca-certificates
 RUN apk add ca-certificates
 
-# Update the Certificate Authority store
+# Update SSL CA certificates
 RUN update-ca-certificates
