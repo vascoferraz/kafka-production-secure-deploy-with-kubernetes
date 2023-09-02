@@ -7,7 +7,7 @@ primary:
   service:
     type: NodePort
     nodePorts:
-      mysql: 30903
+      mysql: 30921
   extraVolumes:
     - name: mysql
       secret:

@@ -209,7 +209,7 @@ fi
 helm upgrade --install phpldapadmin cetic/phpldapadmin --version 0.1.4  -f $TUTORIAL_HOME/manifests/phpldapadmin-values.yaml 
 pod_name=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep phpldapadmin)
 kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
-kubectl patch service phpldapadmin -p '{"spec":{"ports":[{"name":"https","port":443,"nodePort":30910}]}}'
+kubectl patch service phpldapadmin -p '{"spec":{"ports":[{"name":"https","port":443,"nodePort":30902}]}}'
 
 # Create secret for PostgreSQL container
 kubectl create secret generic postgres-pkcs12 \

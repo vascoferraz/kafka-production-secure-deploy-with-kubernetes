@@ -31,19 +31,19 @@ Currently, Control Center is exposed via a NodePort and accessed at the followin
 Currently, Kafka-UI is exposed via a NodePort and accessed at the following address: https://localhost:30901. The only available user is an administrator user with the following credentials: `admin:admin`
 
 ## Access phpLDAPadmin
-Currently, phpLDAPadmin is exposed via a NodePort and can be accessed at the following address: https://localhost:30910. As of the time of writing, phpLDAPadmin is only able to access the non-secure version of the LDAP server, which is: `ldap://ldap.confluent.svc.cluster.local:389`. The user with administrator permissions of this LDAP server is the following: Login DN `cn=admin,dc=test,dc=com`. Password: `confluentrox`.
+Currently, phpLDAPadmin is exposed via a NodePort and can be accessed at the following address: https://localhost:30902. As of the time of writing, phpLDAPadmin is only able to access the non-secure version of the LDAP server, which is: `ldap://ldap.confluent.svc.cluster.local:389`. The user with administrator permissions of this LDAP server is the following: Login DN `cn=admin,dc=test,dc=com`. Password: `confluentrox`.
 
 ## Access PostgreSQL
 Currently, the PostgreSQL instance is exposed via a NodePort and accessed using the following commands but first, make sure you are in the `scripts` folder.
 
 #### From your local machine without TLS:
 ```sh
-psql "host=localhost port=30902 user=postgres password=change-me dbname=postgres"
+psql "host=localhost port=30920 user=postgres password=change-me dbname=postgres"
 ```
 
 #### From your local machine with TLS:
 ```sh
-psql "host=localhost port=30902 user=postgres password=change-me dbname=postgres sslmode=verify-full sslrootcert=./../assets/certs/generated/ca.pem sslcert=./../assets/certs/generated/postgres.pem sslkey=./../assets/certs/generated/postgres-key.pem"
+psql "host=localhost port=30920 user=postgres password=change-me dbname=postgres sslmode=verify-full sslrootcert=./../assets/certs/generated/ca.pem sslcert=./../assets/certs/generated/postgres.pem sslkey=./../assets/certs/generated/postgres-key.pem"
 ```
 
 #### From inside the PostgreSQL container without TLS:
@@ -83,12 +83,12 @@ Currently, the MySQL instance is exposed via a NodePort and accessed using the f
 
 #### From your local machine without TLS:
 ```sh
-mysql --host=localhost --port 30903 --database=mysql --user=mysql --password=change-me --protocol=tcp --ssl-mode=DISABLED
+mysql --host=localhost --port 30921 --database=mysql --user=mysql --password=change-me --protocol=tcp --ssl-mode=DISABLED
 ```
 
 #### From your local machine with TLS:
 ```sh
-mysql --host=localhost --port 30903 --database=mysql --user=mysql --password=change-me --protocol=tcp --ssl-mode=VERIFY_IDENTITY --ssl-ca=./../assets/certs/generated/ca.pem --ssl-cert=./../assets/certs/generated/mysql.pem --ssl-key=./../assets/certs/generated/mysql-key.pem
+mysql --host=localhost --port 30921 --database=mysql --user=mysql --password=change-me --protocol=tcp --ssl-mode=VERIFY_IDENTITY --ssl-ca=./../assets/certs/generated/ca.pem --ssl-cert=./../assets/certs/generated/mysql.pem --ssl-key=./../assets/certs/generated/mysql-key.pem
 ```
 
 #### From inside the MySQL container without TLS:
@@ -111,12 +111,12 @@ Currently, the MariaDB instance is exposed via a NodePort and accessed using the
 
 #### From your local machine without TLS:
 ```sh
-mysql --host=localhost --port 30904 --database=mariadb --user=mariadb --password=change-me --protocol=tcp --ssl-mode=DISABLED
+mysql --host=localhost --port 30922 --database=mariadb --user=mariadb --password=change-me --protocol=tcp --ssl-mode=DISABLED
 ```
 
 #### From your local machine with TLS:
 ```sh
-mysql --host=localhost --port 30904 --database=mariadb --user=mariadb --password=change-me --protocol=tcp --ssl-mode=VERIFY_IDENTITY --ssl-ca=./../assets/certs/generated/ca.pem --ssl-cert=./../assets/certs/generated/mariadb.pem --ssl-key=./../assets/certs/generated/mariadb-key.pem
+mysql --host=localhost --port 30922 --database=mariadb --user=mariadb --password=change-me --protocol=tcp --ssl-mode=VERIFY_IDENTITY --ssl-ca=./../assets/certs/generated/ca.pem --ssl-cert=./../assets/certs/generated/mariadb.pem --ssl-key=./../assets/certs/generated/mariadb-key.pem
 ```
 
 #### From inside the MariaDB container without TLS:
