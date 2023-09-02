@@ -8,7 +8,7 @@ export SINK_CONNECTOR="csv-sink-connector"
 kubectl exec -it kafka-0 -c kafka -- kafka-topics --delete --bootstrap-server kafka.confluent.svc.cluster.local:9092 --command-config /opt/confluentinc/etc/kafka/kafka.properties --topic csv
 
 # Drop csv table
-mysql --host=localhost --port 30903 --database=mysql --user=mysql --password=change-me --protocol=tcp -e "DROP TABLE \`csv\`;"
+mysql --host=localhost --port 30921 --database=mysql --user=mysql --password=change-me --protocol=tcp -e "DROP TABLE \`csv\`;"
 
 # Remove csv source and sink connector files from the Kafka Connect pod
 kubectl exec -it connect-0 -c connect -- rm /tmp/csv-source-connector.json

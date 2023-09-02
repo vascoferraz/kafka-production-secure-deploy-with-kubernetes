@@ -14,7 +14,7 @@ kubectl cp ./sample.csv confluent/connect-0:/tmp/media/nfs/csv/unprocessed/ -c c
 kubectl exec -it kafka-0 -c kafka -- kafka-topics --create --bootstrap-server kafka.confluent.svc.cluster.local:9092 --command-config /opt/confluentinc/etc/kafka/kafka.properties --topic csv --replication-factor 3 --partitions 3
 
 # Create csv table
-mysql --host=localhost --port 30903 --database=mysql --user=mysql --password=change-me --protocol=tcp -e "CREATE TABLE \`csv\` (\`first_name\` VARCHAR(256) NULL, \`last_name\` VARCHAR(256) NULL, \`email\` VARCHAR(256) NOT NULL PRIMARY KEY, \`gender\` VARCHAR(256) NULL, \`ip_address\` VARCHAR(256) NULL, \`date\` VARCHAR(256) NULL);"
+mysql --host=localhost --port 30921 --database=mysql --user=mysql --password=change-me --protocol=tcp -e "CREATE TABLE \`csv\` (\`first_name\` VARCHAR(256) NULL, \`last_name\` VARCHAR(256) NULL, \`email\` VARCHAR(256) NOT NULL PRIMARY KEY, \`gender\` VARCHAR(256) NULL, \`ip_address\` VARCHAR(256) NULL, \`date\` VARCHAR(256) NULL);"
 
 # Copy and deploy source connector config into the Kafka Connect pod
 kubectl cp ./connectors/csv-source-connector.json confluent/connect-0:/tmp/ -c connect

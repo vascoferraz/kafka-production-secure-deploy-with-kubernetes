@@ -8,7 +8,7 @@ primary:
   service:
     type: NodePort
     nodePorts:
-      mysql: 30904
+      mysql: 30922
   extraVolumes:
     - name: mariadb
       secret:

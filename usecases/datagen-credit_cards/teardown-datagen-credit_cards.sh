@@ -8,7 +8,7 @@ export SINK_CONNECTOR="datagen-credit_cards-sink-connector"
 kubectl exec -it kafka-0 -c kafka -- kafka-topics --delete --bootstrap-server kafka.confluent.svc.cluster.local:9092 --command-config /opt/confluentinc/etc/kafka/kafka.properties --topic datagen-credit_cards
 
 # Drop datagen-credit_cards table
-mysql --host=localhost --port 30904 --database=mariadb --user=mariadb --password=change-me --protocol=tcp -e "DROP TABLE \`datagen-credit_cards\`;"
+mysql --host=localhost --port 30922 --database=mariadb --user=mariadb --password=change-me --protocol=tcp -e "DROP TABLE \`datagen-credit_cards\`;"
 
 # Remove datagen-credit_cards source connector file from the Kafka Connect pod
 kubectl exec -it connect-0 -c connect -- rm /tmp/datagen-credit_cards-source-connector.json
