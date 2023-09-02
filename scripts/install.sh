@@ -90,13 +90,13 @@ kubectl create secret generic ldap-sslcerts  \
 
 # Restart OpenLDAP pod but only if it already exists
 if [ "$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep ldap-0)" != "" ]; then
-  kubectl rollout restart deployment test-ldap
+  kubectl rollout restart deployment ldap
 else
   echo "Pod test-ldap does not exist."
 fi
 
 # Deploy OpenLDAP
-helm upgrade --install test-ldap $TUTORIAL_HOME/assets/openldap --namespace confluent
+helm upgrade --install ldap $TUTORIAL_HOME/assets/openldap --namespace confluent
 kubectl wait --for=condition=Ready pod/ldap-0 --timeout=60s
 for i in 1 2 3 4 5; do kubectl --namespace confluent exec -it ldap-0 -- ldapsearch -LLL -x -H ldap://ldap.confluent.svc.cluster.local:389 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!' && break || sleep 15; done
 
