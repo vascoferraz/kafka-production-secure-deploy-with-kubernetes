@@ -191,7 +191,7 @@ kubectl create secret generic kafkaui-pkcs12 \
     --from-file=truststore.p12=$TUTORIAL_HOME/assets/certs/generated/truststore.p12
 
 # Deploy Kafka UI container
-helm upgrade --install kafka-ui kafka-ui/kafka-ui --version 0.7.2 -f $TUTORIAL_HOME/manifests/kafkaui-values.yaml
+helm upgrade --install kafka-ui kafka-ui/kafka-ui --version 0.7.4 -f $TUTORIAL_HOME/manifests/kafkaui-values.yaml
 pod_name=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep kafka-ui)
 kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
 
