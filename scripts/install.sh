@@ -92,7 +92,7 @@ kubectl create secret generic ldap-sslcerts  \
 if [ "$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep ldap-0)" != "" ]; then
   kubectl rollout restart deployment ldap
 else
-  echo "Pod test-ldap does not exist."
+  echo "Pod ldap-0 does not exist."
 fi
 
 # Deploy OpenLDAP
