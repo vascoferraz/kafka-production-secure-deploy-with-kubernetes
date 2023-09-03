@@ -44,6 +44,15 @@ cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
 # Validate server certificate and SANs
 openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/server.pem -text -noout
 
+# Create ldap certificates with the appropriate SANs (SANs listed in ldap-domain.json)
+cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
+-ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
+-config=$TUTORIAL_HOME/assets/certs/single-cert/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certs/single-cert/ldap-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/ldap
+
+# Validate ldap certificate and SANs
+openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/ldap.pem -text -noout
+
 # Create phpldapadmin certificates with the appropriate SANs (SANs listed in phpldapadmin-domain.json)
 cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
 -ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
@@ -83,9 +92,9 @@ openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/mariadb.pem -text -noout
 # Create secret with TLS certificates for the OpenLDAP container
 kubectl delete secret ldap-sslcerts
 kubectl create secret generic ldap-sslcerts  \
-  --from-file=server.pem=$TUTORIAL_HOME/assets/certs/generated/server.pem \
+  --from-file=ldap.pem=$TUTORIAL_HOME/assets/certs/generated/ldap.pem \
   --from-file=ca.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
-  --from-file=server-key.pem=$TUTORIAL_HOME/assets/certs/generated/server-key.pem \
+  --from-file=ldap-key.pem=$TUTORIAL_HOME/assets/certs/generated/ldap-key.pem \
   --namespace confluent
 
 # Restart OpenLDAP pod but only if it already exists

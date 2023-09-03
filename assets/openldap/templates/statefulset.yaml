@@ -31,9 +31,9 @@ spec:
         - name: LDAP_TLS_VERIFY_CLIENT
           value: try
         - name: LDAP_TLS_CRT_FILENAME
-          value: server.pem
+          value: ldap.pem
         - name: LDAP_TLS_KEY_FILENAME
-          value: server-key.pem
+          value: ldap-key.pem
         - name: LDAP_TLS_CA_CRT_FILENAME
           value: ca.pem
         - name: LDAP_TLS
