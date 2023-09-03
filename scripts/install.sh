@@ -53,6 +53,15 @@ cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
 # Validate ldap certificate and SANs
 openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/ldap.pem -text -noout
 
+# Create Kafka-UI certificates with the appropriate SANs (SANs listed in kafka-ui-domain.json)
+cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
+-ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
+-config=$TUTORIAL_HOME/assets/certs/single-cert/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certs/single-cert/kafka-ui-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/kafka-ui
+
+# Validate Kafka-UI certificate and SANs
+openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/kafka-ui.pem -text -noout
+
 # Create phpldapadmin certificates with the appropriate SANs (SANs listed in phpldapadmin-domain.json)
 cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
 -ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
@@ -187,14 +196,14 @@ rm $TUTORIAL_HOME/assets/certs/generated/keystore.p12
 rm $TUTORIAL_HOME/assets/certs/generated/truststore.p12
 kubectl delete secrets kafkaui-pkcs12
 
-openssl pkcs12 -export -in $TUTORIAL_HOME/assets/certs/generated/server.pem -inkey $TUTORIAL_HOME/assets/certs/generated/server-key.pem -out $TUTORIAL_HOME/assets/certs/generated/keystore.p12 -password pass:mystorepassword
+openssl pkcs12 -export -in $TUTORIAL_HOME/assets/certs/generated/kafka-ui.pem -inkey $TUTORIAL_HOME/assets/certs/generated/kafka-ui-key.pem -out $TUTORIAL_HOME/assets/certs/generated/keystore.p12 -password pass:mystorepassword
 
 keytool -importcert -storetype PKCS12 -keystore $TUTORIAL_HOME/assets/certs/generated/truststore.p12 -storepass mystorepassword -alias ca -file $TUTORIAL_HOME/assets/certs/generated/ca.pem -noprompt
 
 kubectl create secret generic kafkaui-pkcs12 \
     --from-file=cacerts.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
-    --from-file=privkey.pem=$TUTORIAL_HOME/assets/certs/generated/server-key.pem \
-    --from-file=fullchain.pem=$TUTORIAL_HOME/assets/certs/generated/server.pem \
+    --from-file=privkey.pem=$TUTORIAL_HOME/assets/certs/generated/kafka-ui-key.pem \
+    --from-file=fullchain.pem=$TUTORIAL_HOME/assets/certs/generated/kafka-ui.pem \
     --from-literal=jksPassword.txt=jksPassword=mystorepassword \
     --from-file=keystore.p12=$TUTORIAL_HOME/assets/certs/generated/keystore.p12 \
     --from-file=truststore.p12=$TUTORIAL_HOME/assets/certs/generated/truststore.p12
