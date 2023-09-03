@@ -14,4 +14,3 @@ spec:
   clusterIP: None
   selector:
     app: ldap
-
