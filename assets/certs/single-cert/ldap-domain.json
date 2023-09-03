@@ -1,0 +1,19 @@
+{
+  "CN": "ldap",
+  "hosts": [
+    "*.ldap.confluent.svc.cluster.local",
+    "ldap.confluent.svc.cluster.local",
+    "localhost"
+  ],
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "Universe",
+      "ST": "Pangea",
+      "L": "Earth"
+    }
+  ]
+}
