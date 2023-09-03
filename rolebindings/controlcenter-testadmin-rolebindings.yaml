@@ -71,4 +71,3 @@ spec:
   ## if use other kafkaRestClass except for default, need to configure accordingly
   #kafkaRestClassRef:
   # name: default
----
