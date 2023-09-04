@@ -220,7 +220,7 @@ kubectl describe confluentrolebinding
 ```
 
 ## Additional notes
-1. Currently, the [install](scripts/install.sh) script only supports the [scenario](assets/certs/single-cert/README.md) that creates only one server certificate and key for all Confluent component services. The other [scenario](assets/certs/component-certs/README.md), which uses one server certificate and key per Confluent component, is not yet supported.
+1. The [install](scripts/install.sh) script supports the [scenario](assets/certs/certificates/README.md) that creates one server certificate and key for all Confluent components and one certificate and key for each non-Confluent component. All Confluent and non-Confluent components share the same CA (Certificate Authority).
 
 2. Kafka-UI, OpenLDAP, phpLDAPadmin, PostgreSQL, MySQL, and MariaDB use unique certificates and keys, while they all rely on the same Certificate Authority (CA) as the one used by all the Confluent components.
 
