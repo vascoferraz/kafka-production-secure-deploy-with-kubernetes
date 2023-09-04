@@ -30,7 +30,7 @@ kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
 brew install cfssl
 
 # Create Certificate Authority
-mkdir $TUTORIAL_HOME/assets/certs/generated && cfssl gencert -initca $TUTORIAL_HOME/assets/certs/single-cert/ca-csr.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/ca -
+mkdir $TUTORIAL_HOME/assets/certs/generated && cfssl gencert -initca $TUTORIAL_HOME/assets/certs/certificates/ca-csr.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/ca -
 
 # Validate Certificate Authority
 openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/ca.pem -text -noout
@@ -38,8 +38,8 @@ openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/ca.pem -text -noout
 # Create server certificates with the appropriate SANs (SANs listed in server-domain.json)
 cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
 -ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
--config=$TUTORIAL_HOME/assets/certs/single-cert/ca-config.json \
--profile=server $TUTORIAL_HOME/assets/certs/single-cert/server-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/server
+-config=$TUTORIAL_HOME/assets/certs/certificates/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certs/certificates/server-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/server
 
 # Validate server certificate and SANs
 openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/server.pem -text -noout
@@ -47,8 +47,8 @@ openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/server.pem -text -noout
 # Create ldap certificates with the appropriate SANs (SANs listed in ldap-domain.json)
 cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
 -ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
--config=$TUTORIAL_HOME/assets/certs/single-cert/ca-config.json \
--profile=server $TUTORIAL_HOME/assets/certs/single-cert/ldap-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/ldap
+-config=$TUTORIAL_HOME/assets/certs/certificates/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certs/certificates/ldap-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/ldap
 
 # Validate ldap certificate and SANs
 openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/ldap.pem -text -noout
@@ -56,8 +56,8 @@ openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/ldap.pem -text -noout
 # Create Kafka-UI certificates with the appropriate SANs (SANs listed in kafka-ui-domain.json)
 cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
 -ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
--config=$TUTORIAL_HOME/assets/certs/single-cert/ca-config.json \
--profile=server $TUTORIAL_HOME/assets/certs/single-cert/kafka-ui-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/kafka-ui
+-config=$TUTORIAL_HOME/assets/certs/certificates/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certs/certificates/kafka-ui-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/kafka-ui
 
 # Validate Kafka-UI certificate and SANs
 openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/kafka-ui.pem -text -noout
@@ -65,8 +65,8 @@ openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/kafka-ui.pem -text -noout
 # Create phpldapadmin certificates with the appropriate SANs (SANs listed in phpldapadmin-domain.json)
 cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
 -ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
--config=$TUTORIAL_HOME/assets/certs/single-cert/ca-config.json \
--profile=server $TUTORIAL_HOME/assets/certs/single-cert/phpldapadmin-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/phpldapadmin
+-config=$TUTORIAL_HOME/assets/certs/certificates/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certs/certificates/phpldapadmin-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/phpldapadmin
 
 # Validate phpldapadmin certificate and SANs
 openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/phpldapadmin.pem -text -noout
@@ -74,8 +74,8 @@ openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/phpldapadmin.pem -text -n
 # Create postgres certificates with the appropriate SANs (SANs listed in postgres-domain.json)
 cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
 -ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
--config=$TUTORIAL_HOME/assets/certs/single-cert/ca-config.json \
--profile=server $TUTORIAL_HOME/assets/certs/single-cert/postgres-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/postgres
+-config=$TUTORIAL_HOME/assets/certs/certificates/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certs/certificates/postgres-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/postgres
 
 # Validate postgres certificate and SANs
 openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/postgres.pem -text -noout
@@ -83,8 +83,8 @@ openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/postgres.pem -text -noout
 # Create mysql certificates with the appropriate SANs (SANs listed in mysql-domain.json)
 cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
 -ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
--config=$TUTORIAL_HOME/assets/certs/single-cert/ca-config.json \
--profile=server $TUTORIAL_HOME/assets/certs/single-cert/mysql-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/mysql
+-config=$TUTORIAL_HOME/assets/certs/certificates/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certs/certificates/mysql-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/mysql
 
 # Validate mysql certificate and SANs
 openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/mysql.pem -text -noout
@@ -92,8 +92,8 @@ openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/mysql.pem -text -noout
 # Create mariadb certificates with the appropriate SANs (SANs listed in mariadb-domain.json)
 cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
 -ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
--config=$TUTORIAL_HOME/assets/certs/single-cert/ca-config.json \
--profile=server $TUTORIAL_HOME/assets/certs/single-cert/mariadb-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/mariadb
+-config=$TUTORIAL_HOME/assets/certs/certificates/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certs/certificates/mariadb-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/mariadb
 
 # Validate mariadb certificate and SANs
 openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/mariadb.pem -text -noout
@@ -137,8 +137,8 @@ kubectl create secret generic credential \
 
 # Provide RBAC principal credentials
 kubectl create secret generic mds-token \
-  --from-file=mdsPublicKey.pem=$TUTORIAL_HOME/assets/certs/single-cert/mds-publickey.txt \
-  --from-file=mdsTokenKeyPair.pem=$TUTORIAL_HOME/assets/certs/single-cert/mds-tokenkeypair.txt \
+  --from-file=mdsPublicKey.pem=$TUTORIAL_HOME/assets/certs/certificates/mds-publickey.txt \
+  --from-file=mdsTokenKeyPair.pem=$TUTORIAL_HOME/assets/certs/certificates/mds-tokenkeypair.txt \
   --namespace confluent
 
 # Kafka RBAC credential
