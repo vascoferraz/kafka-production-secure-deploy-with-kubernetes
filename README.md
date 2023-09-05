@@ -31,7 +31,7 @@ Currently, Control Center is exposed via a NodePort and accessed at the followin
 Currently, Kafka-UI is exposed via a NodePort and accessed at the following address: https://localhost:30901. The only available user is an administrator user with the following credentials: `admin:admin`
 
 ## Access phpLDAPadmin
-Currently, phpLDAPadmin is exposed via a NodePort and can be accessed at the following address: https://localhost:30902. As of the time of writing, phpLDAPadmin is only able to access the non-secure version of the LDAP server, which is: `ldap://ldap.confluent.svc.cluster.local:389`. The user with administrator permissions of this LDAP server is the following: Login DN `cn=admin,dc=test,dc=com`. Password: `confluentrox`.
+Currently, phpLDAPadmin is exposed via a NodePort and can be accessed at the following address: https://localhost:30902. The LDAP server can be accessed using the non-secure connection, which is: `ldap://ldap.confluent.svc.cluster.local:389`, and the secure connection, which is: `ldaps://ldap.confluent.svc.cluster.local:636`. The user with administrator permissions of this LDAP server is the following: Login DN `cn=admin,dc=test,dc=com`. Password: `confluentrox`.
 
 ## Access PostgreSQL
 Currently, the PostgreSQL instance is exposed via a NodePort and accessed using the following commands but first, make sure you are in the `scripts` folder.
@@ -220,7 +220,7 @@ kubectl describe confluentrolebinding
 ```
 
 ## Additional notes
-1. The [install](scripts/install.sh) script supports the [scenario](assets/certificates/README.md) that creates one server certificate and key for all Confluent components and one for each non-Confluent component. All Confluent and non-Confluent components share the same CA (Certificate Authority)..
+1. The [install](scripts/install.sh) script supports the [scenario](assets/certificates/README.md) that creates one server certificate and key for all Confluent components and one for each non-Confluent component. All Confluent and non-Confluent components share the same CA (Certificate Authority).
 
 2. Kafka-UI, OpenLDAP, phpLDAPadmin, PostgreSQL, MySQL, and MariaDB use unique certificates and keys, while they all rely on the same Certificate Authority (CA) as the one used by all the Confluent components.
 
