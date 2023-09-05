@@ -30,80 +30,80 @@ kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
 brew install cfssl
 
 # Create Certificate Authority
-mkdir $TUTORIAL_HOME/assets/certs/generated && cfssl gencert -initca $TUTORIAL_HOME/assets/certs/certificates/ca-csr.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/ca -
+mkdir $TUTORIAL_HOME/assets/certificates/generated && cfssl gencert -initca $TUTORIAL_HOME/assets/certificates/sources/ca-csr.json | cfssljson -bare $TUTORIAL_HOME/assets/certificates/generated/ca -
 
 # Validate Certificate Authority
-openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/ca.pem -text -noout
+openssl x509 -in $TUTORIAL_HOME/assets/certificates/generated/ca.pem -text -noout
 
 # Create server certificates with the appropriate SANs (SANs listed in server-domain.json)
-cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
--ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
--config=$TUTORIAL_HOME/assets/certs/certificates/ca-config.json \
--profile=server $TUTORIAL_HOME/assets/certs/certificates/server-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/server
+cfssl gencert -ca=$TUTORIAL_HOME/assets/certificates/generated/ca.pem \
+-ca-key=$TUTORIAL_HOME/assets/certificates/generated/ca-key.pem \
+-config=$TUTORIAL_HOME/assets/certificates/sources/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certificates/sources/server-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certificates/generated/server
 
 # Validate server certificate and SANs
-openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/server.pem -text -noout
+openssl x509 -in $TUTORIAL_HOME/assets/certificates/generated/server.pem -text -noout
 
 # Create ldap certificates with the appropriate SANs (SANs listed in ldap-domain.json)
-cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
--ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
--config=$TUTORIAL_HOME/assets/certs/certificates/ca-config.json \
--profile=server $TUTORIAL_HOME/assets/certs/certificates/ldap-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/ldap
+cfssl gencert -ca=$TUTORIAL_HOME/assets/certificates/generated/ca.pem \
+-ca-key=$TUTORIAL_HOME/assets/certificates/generated/ca-key.pem \
+-config=$TUTORIAL_HOME/assets/certificates/sources/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certificates/sources/ldap-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certificates/generated/ldap
 
 # Validate ldap certificate and SANs
-openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/ldap.pem -text -noout
+openssl x509 -in $TUTORIAL_HOME/assets/certificates/generated/ldap.pem -text -noout
 
 # Create Kafka-UI certificates with the appropriate SANs (SANs listed in kafka-ui-domain.json)
-cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
--ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
--config=$TUTORIAL_HOME/assets/certs/certificates/ca-config.json \
--profile=server $TUTORIAL_HOME/assets/certs/certificates/kafka-ui-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/kafka-ui
+cfssl gencert -ca=$TUTORIAL_HOME/assets/certificates/generated/ca.pem \
+-ca-key=$TUTORIAL_HOME/assets/certificates/generated/ca-key.pem \
+-config=$TUTORIAL_HOME/assets/certificates/sources/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certificates/sources/kafka-ui-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certificates/generated/kafka-ui
 
 # Validate Kafka-UI certificate and SANs
-openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/kafka-ui.pem -text -noout
+openssl x509 -in $TUTORIAL_HOME/assets/certificates/generated/kafka-ui.pem -text -noout
 
 # Create phpldapadmin certificates with the appropriate SANs (SANs listed in phpldapadmin-domain.json)
-cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
--ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
--config=$TUTORIAL_HOME/assets/certs/certificates/ca-config.json \
--profile=server $TUTORIAL_HOME/assets/certs/certificates/phpldapadmin-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/phpldapadmin
+cfssl gencert -ca=$TUTORIAL_HOME/assets/certificates/generated/ca.pem \
+-ca-key=$TUTORIAL_HOME/assets/certificates/generated/ca-key.pem \
+-config=$TUTORIAL_HOME/assets/certificates/sources/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certificates/sources/phpldapadmin-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certificates/generated/phpldapadmin
 
 # Validate phpldapadmin certificate and SANs
-openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/phpldapadmin.pem -text -noout
+openssl x509 -in $TUTORIAL_HOME/assets/certificates/generated/phpldapadmin.pem -text -noout
 
 # Create postgres certificates with the appropriate SANs (SANs listed in postgres-domain.json)
-cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
--ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
--config=$TUTORIAL_HOME/assets/certs/certificates/ca-config.json \
--profile=server $TUTORIAL_HOME/assets/certs/certificates/postgres-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/postgres
+cfssl gencert -ca=$TUTORIAL_HOME/assets/certificates/generated/ca.pem \
+-ca-key=$TUTORIAL_HOME/assets/certificates/generated/ca-key.pem \
+-config=$TUTORIAL_HOME/assets/certificates/sources/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certificates/sources/postgres-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certificates/generated/postgres
 
 # Validate postgres certificate and SANs
-openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/postgres.pem -text -noout
+openssl x509 -in $TUTORIAL_HOME/assets/certificates/generated/postgres.pem -text -noout
 
 # Create mysql certificates with the appropriate SANs (SANs listed in mysql-domain.json)
-cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
--ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
--config=$TUTORIAL_HOME/assets/certs/certificates/ca-config.json \
--profile=server $TUTORIAL_HOME/assets/certs/certificates/mysql-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/mysql
+cfssl gencert -ca=$TUTORIAL_HOME/assets/certificates/generated/ca.pem \
+-ca-key=$TUTORIAL_HOME/assets/certificates/generated/ca-key.pem \
+-config=$TUTORIAL_HOME/assets/certificates/sources/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certificates/sources/mysql-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certificates/generated/mysql
 
 # Validate mysql certificate and SANs
-openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/mysql.pem -text -noout
+openssl x509 -in $TUTORIAL_HOME/assets/certificates/generated/mysql.pem -text -noout
 
 # Create mariadb certificates with the appropriate SANs (SANs listed in mariadb-domain.json)
-cfssl gencert -ca=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
--ca-key=$TUTORIAL_HOME/assets/certs/generated/ca-key.pem \
--config=$TUTORIAL_HOME/assets/certs/certificates/ca-config.json \
--profile=server $TUTORIAL_HOME/assets/certs/certificates/mariadb-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certs/generated/mariadb
+cfssl gencert -ca=$TUTORIAL_HOME/assets/certificates/generated/ca.pem \
+-ca-key=$TUTORIAL_HOME/assets/certificates/generated/ca-key.pem \
+-config=$TUTORIAL_HOME/assets/certificates/sources/ca-config.json \
+-profile=server $TUTORIAL_HOME/assets/certificates/sources/mariadb-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certificates/generated/mariadb
 
 # Validate mariadb certificate and SANs
-openssl x509 -in $TUTORIAL_HOME/assets/certs/generated/mariadb.pem -text -noout
+openssl x509 -in $TUTORIAL_HOME/assets/certificates/generated/mariadb.pem -text -noout
 
 # Create secret with TLS certificates for the OpenLDAP container
 kubectl delete secret ldap-sslcerts
 kubectl create secret generic ldap-sslcerts  \
-  --from-file=ldap.pem=$TUTORIAL_HOME/assets/certs/generated/ldap.pem \
-  --from-file=ca.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
-  --from-file=ldap-key.pem=$TUTORIAL_HOME/assets/certs/generated/ldap-key.pem \
+  --from-file=ldap.pem=$TUTORIAL_HOME/assets/certificates/generated/ldap.pem \
+  --from-file=ca.pem=$TUTORIAL_HOME/assets/certificates/generated/ca.pem \
+  --from-file=ldap-key.pem=$TUTORIAL_HOME/assets/certificates/generated/ldap-key.pem \
   --namespace confluent
 
 # Restart OpenLDAP pod but only if it already exists
@@ -120,9 +120,9 @@ for i in 1 2 3 4 5; do kubectl --namespace confluent exec -it ldap-0 -- ldapsear
 
 # Provide component TLS certificates
 kubectl create secret generic tls-group1 \
-  --from-file=fullchain.pem=$TUTORIAL_HOME/assets/certs/generated/server.pem \
-  --from-file=cacerts.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
-  --from-file=privkey.pem=$TUTORIAL_HOME/assets/certs/generated/server-key.pem \
+  --from-file=fullchain.pem=$TUTORIAL_HOME/assets/certificates/generated/server.pem \
+  --from-file=cacerts.pem=$TUTORIAL_HOME/assets/certificates/generated/ca.pem \
+  --from-file=privkey.pem=$TUTORIAL_HOME/assets/certificates/generated/server-key.pem \
   --namespace confluent
 
 # Provide authentication credentials
@@ -137,8 +137,8 @@ kubectl create secret generic credential \
 
 # Provide RBAC principal credentials
 kubectl create secret generic mds-token \
-  --from-file=mdsPublicKey.pem=$TUTORIAL_HOME/assets/certs/certificates/mds-publickey.txt \
-  --from-file=mdsTokenKeyPair.pem=$TUTORIAL_HOME/assets/certs/certificates/mds-tokenkeypair.txt \
+  --from-file=mdsPublicKey.pem=$TUTORIAL_HOME/assets/certificates/sources/mds-publickey.txt \
+  --from-file=mdsTokenKeyPair.pem=$TUTORIAL_HOME/assets/certificates/sources/mds-tokenkeypair.txt \
   --namespace confluent
 
 # Kafka RBAC credential
@@ -192,21 +192,21 @@ kubectl apply -f $TUTORIAL_HOME/rolebindings/controlcenter-sr-rolebindings.yaml 
 kubectl exec -it kafka-0 -c kafka -- kafka-acls --bootstrap-server kafka.confluent.svc.cluster.local:9092 --command-config /opt/confluentinc/etc/kafka/kafka.properties --add --allow-principal User:connect --allow-host "*" --operation All --topic "*" --group "*"
 
 # Create secret with keystore and truststore for Kafka-UI container
-rm $TUTORIAL_HOME/assets/certs/generated/keystore.p12
-rm $TUTORIAL_HOME/assets/certs/generated/truststore.p12
+rm $TUTORIAL_HOME/assets/certificates/generated/keystore.p12
+rm $TUTORIAL_HOME/assets/certificates/generated/truststore.p12
 kubectl delete secrets kafkaui-pkcs12
 
-openssl pkcs12 -export -in $TUTORIAL_HOME/assets/certs/generated/kafka-ui.pem -inkey $TUTORIAL_HOME/assets/certs/generated/kafka-ui-key.pem -out $TUTORIAL_HOME/assets/certs/generated/keystore.p12 -password pass:mystorepassword
+openssl pkcs12 -export -in $TUTORIAL_HOME/assets/certificates/generated/kafka-ui.pem -inkey $TUTORIAL_HOME/assets/certificates/generated/kafka-ui-key.pem -out $TUTORIAL_HOME/assets/certificates/generated/keystore.p12 -password pass:mystorepassword
 
-keytool -importcert -storetype PKCS12 -keystore $TUTORIAL_HOME/assets/certs/generated/truststore.p12 -storepass mystorepassword -alias ca -file $TUTORIAL_HOME/assets/certs/generated/ca.pem -noprompt
+keytool -importcert -storetype PKCS12 -keystore $TUTORIAL_HOME/assets/certificates/generated/truststore.p12 -storepass mystorepassword -alias ca -file $TUTORIAL_HOME/assets/certificates/generated/ca.pem -noprompt
 
 kubectl create secret generic kafkaui-pkcs12 \
-    --from-file=cacerts.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem \
-    --from-file=privkey.pem=$TUTORIAL_HOME/assets/certs/generated/kafka-ui-key.pem \
-    --from-file=fullchain.pem=$TUTORIAL_HOME/assets/certs/generated/kafka-ui.pem \
+    --from-file=cacerts.pem=$TUTORIAL_HOME/assets/certificates/generated/ca.pem \
+    --from-file=privkey.pem=$TUTORIAL_HOME/assets/certificates/generated/kafka-ui-key.pem \
+    --from-file=fullchain.pem=$TUTORIAL_HOME/assets/certificates/generated/kafka-ui.pem \
     --from-literal=jksPassword.txt=jksPassword=mystorepassword \
-    --from-file=keystore.p12=$TUTORIAL_HOME/assets/certs/generated/keystore.p12 \
-    --from-file=truststore.p12=$TUTORIAL_HOME/assets/certs/generated/truststore.p12
+    --from-file=keystore.p12=$TUTORIAL_HOME/assets/certificates/generated/keystore.p12 \
+    --from-file=truststore.p12=$TUTORIAL_HOME/assets/certificates/generated/truststore.p12
 
 # Deploy Kafka UI container
 helm upgrade --install kafka-ui kafka-ui/kafka-ui --version 0.7.4 -f $TUTORIAL_HOME/manifests/kafkaui-values.yaml
@@ -231,9 +231,9 @@ kubectl patch service phpldapadmin -p '{"spec":{"ports":[{"name":"https","port":
 
 # Create secret for PostgreSQL container
 kubectl create secret generic postgres-pkcs12 \
-    --from-file=cert.pem=$TUTORIAL_HOME/assets/certs/generated/postgres.pem \
-    --from-file=cert.key=$TUTORIAL_HOME/assets/certs/generated/postgres-key.pem \
-    --from-file=ca.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem
+    --from-file=cert.pem=$TUTORIAL_HOME/assets/certificates/generated/postgres.pem \
+    --from-file=cert.key=$TUTORIAL_HOME/assets/certificates/generated/postgres-key.pem \
+    --from-file=ca.pem=$TUTORIAL_HOME/assets/certificates/generated/ca.pem
 
 # Deploy PostgreSQL container
 helm upgrade --install postgresql bitnami/postgresql --version 12.10.0 -f $TUTORIAL_HOME/manifests/postgres-values.yaml
@@ -241,9 +241,9 @@ kubectl wait --for=condition=Ready pod/postgresql-0 --timeout=60s
 
 # Create secret for MySQL container
 kubectl create secret generic mysql-pkcs12 \
-    --from-file=mysql.pem=$TUTORIAL_HOME/assets/certs/generated/mysql.pem \
-    --from-file=mysql-key.pem=$TUTORIAL_HOME/assets/certs/generated/mysql-key.pem \
-    --from-file=ca.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem
+    --from-file=mysql.pem=$TUTORIAL_HOME/assets/certificates/generated/mysql.pem \
+    --from-file=mysql-key.pem=$TUTORIAL_HOME/assets/certificates/generated/mysql-key.pem \
+    --from-file=ca.pem=$TUTORIAL_HOME/assets/certificates/generated/ca.pem
 
 # Deploy MySQL container
 helm upgrade --install mysql bitnami/mysql --version 9.12.1 -f $TUTORIAL_HOME/manifests/mysql-values.yaml
@@ -251,9 +251,9 @@ kubectl wait --for=condition=Ready pod/mysql-0 --timeout=60s
 
 # Create secret for MariaDB container
 kubectl create secret generic mariadb-pkcs12 \
-    --from-file=mariadb.pem=$TUTORIAL_HOME/assets/certs/generated/mariadb.pem \
-    --from-file=mariadb-key.pem=$TUTORIAL_HOME/assets/certs/generated/mariadb-key.pem \
-    --from-file=ca.pem=$TUTORIAL_HOME/assets/certs/generated/ca.pem
+    --from-file=mariadb.pem=$TUTORIAL_HOME/assets/certificates/generated/mariadb.pem \
+    --from-file=mariadb-key.pem=$TUTORIAL_HOME/assets/certificates/generated/mariadb-key.pem \
+    --from-file=ca.pem=$TUTORIAL_HOME/assets/certificates/generated/ca.pem
 
 # Deploy MariaDB container
 helm upgrade --install mariadb bitnami/mariadb --version 13.1.2 -f $TUTORIAL_HOME/manifests/mariadb-values.yaml

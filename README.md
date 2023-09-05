@@ -43,7 +43,7 @@ psql "host=localhost port=30920 user=postgres password=change-me dbname=postgres
 
 #### From your local machine with TLS:
 ```sh
-psql "host=localhost port=30920 user=postgres password=change-me dbname=postgres sslmode=verify-full sslrootcert=./../assets/certs/generated/ca.pem sslcert=./../assets/certs/generated/postgres.pem sslkey=./../assets/certs/generated/postgres-key.pem"
+psql "host=localhost port=30920 user=postgres password=change-me dbname=postgres sslmode=verify-full sslrootcert=./../assets/certificates/generated/ca.pem sslcert=./../assets/certificates/generated/postgres.pem sslkey=./../assets/certificates/generated/postgres-key.pem"
 ```
 
 #### From inside the PostgreSQL container without TLS:
@@ -55,7 +55,7 @@ psql "host=localhost port=5432 user=postgres password=change-me dbname=postgres"
 #### From inside the PostgreSQL container with TLS:
 ```sh
 kubectl exec -it postgresql-0 -c postgresql -- bash
-psql "host=localhost port=5432 user=postgres password=change-me dbname=postgres sslmode=verify-full sslrootcert=/opt/bitnami/postgresql/certs/ca.pem sslcert=/opt/bitnami/postgresql/certs/cert.pem sslkey=/opt/bitnami/postgresql/certs/cert.key"
+psql "host=localhost port=5432 user=postgres password=change-me dbname=postgres sslmode=verify-full sslrootcert=/opt/bitnami/postgresql/certificates/ca.pem sslcert=/opt/bitnami/postgresql/certificates/cert.pem sslkey=/opt/bitnami/postgresql/certificates/cert.key"
 ```
 
 #### How to disable non-secure connections on PostgreSQL:
@@ -88,7 +88,7 @@ mysql --host=localhost --port 30921 --database=mysql --user=mysql --password=cha
 
 #### From your local machine with TLS:
 ```sh
-mysql --host=localhost --port 30921 --database=mysql --user=mysql --password=change-me --protocol=tcp --ssl-mode=VERIFY_IDENTITY --ssl-ca=./../assets/certs/generated/ca.pem --ssl-cert=./../assets/certs/generated/mysql.pem --ssl-key=./../assets/certs/generated/mysql-key.pem
+mysql --host=localhost --port 30921 --database=mysql --user=mysql --password=change-me --protocol=tcp --ssl-mode=VERIFY_IDENTITY --ssl-ca=./../assets/certificates/generated/ca.pem --ssl-cert=./../assets/certificates/generated/mysql.pem --ssl-key=./../assets/certificates/generated/mysql-key.pem
 ```
 
 #### From inside the MySQL container without TLS:
@@ -116,7 +116,7 @@ mysql --host=localhost --port 30922 --database=mariadb --user=mariadb --password
 
 #### From your local machine with TLS:
 ```sh
-mysql --host=localhost --port 30922 --database=mariadb --user=mariadb --password=change-me --protocol=tcp --ssl-mode=VERIFY_IDENTITY --ssl-ca=./../assets/certs/generated/ca.pem --ssl-cert=./../assets/certs/generated/mariadb.pem --ssl-key=./../assets/certs/generated/mariadb-key.pem
+mysql --host=localhost --port 30922 --database=mariadb --user=mariadb --password=change-me --protocol=tcp --ssl-mode=VERIFY_IDENTITY --ssl-ca=./../assets/certificates/generated/ca.pem --ssl-cert=./../assets/certificates/generated/mariadb.pem --ssl-key=./../assets/certificates/generated/mariadb-key.pem
 ```
 
 #### From inside the MariaDB container without TLS:
@@ -220,7 +220,7 @@ kubectl describe confluentrolebinding
 ```
 
 ## Additional notes
-1. The [install](scripts/install.sh) script supports the [scenario](assets/certs/certificates/README.md) that creates one server certificate and key for all Confluent components and one certificate and key for each non-Confluent component. All Confluent and non-Confluent components share the same CA (Certificate Authority).
+1. The [install](scripts/install.sh) script supports the [scenario](assets/certificates/README.md) that creates one server certificate and key for all Confluent components and one for each non-Confluent component. All Confluent and non-Confluent components share the same CA (Certificate Authority)..
 
 2. Kafka-UI, OpenLDAP, phpLDAPadmin, PostgreSQL, MySQL, and MariaDB use unique certificates and keys, while they all rely on the same Certificate Authority (CA) as the one used by all the Confluent components.
 

@@ -13,9 +13,9 @@ kubectl apply -f $TUTORIAL_HOME/manifests/alpine-syslog.yaml
 kubectl wait --for=condition=Ready pod/alpine-syslog --timeout=60s
 
 # Copy CA and PostgreSQL certificate and private key into the Kafka Connect pod
-kubectl cp $TUTORIAL_HOME/assets/certs/generated/postgres.pem confluent/connect-0:/tmp/ -c connect
-kubectl cp $TUTORIAL_HOME/assets/certs/generated/postgres-key.pem confluent/connect-0:/tmp/ -c connect
-kubectl cp $TUTORIAL_HOME/assets/certs/generated/ca.pem confluent/connect-0:/tmp/ -c connect
+kubectl cp $TUTORIAL_HOME/assets/certificates/generated/postgres.pem confluent/connect-0:/tmp/ -c connect
+kubectl cp $TUTORIAL_HOME/assets/certificates/generated/postgres-key.pem confluent/connect-0:/tmp/ -c connect
+kubectl cp $TUTORIAL_HOME/assets/certificates/generated/ca.pem confluent/connect-0:/tmp/ -c connect
 
 # Convert the PostgreSQL private key from PEM to DER
 kubectl exec -it connect-0 -c connect -- openssl pkcs8 -topk8 -v1 PBE-SHA1-3DES -inform PEM -outform DER -in /tmp/postgres-key.pem -out /tmp/postgresql.pk8 -passout pass:password

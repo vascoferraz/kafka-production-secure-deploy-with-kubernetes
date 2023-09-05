@@ -3,7 +3,7 @@ FROM alpine:3.18.3
 USER root
 
 # Copy Certificate Authority
-COPY assets/certs/generated/ca.pem /etc/ssl/certs/ca.pem
+COPY assets/certificates/generated/ca.pem /etc/ssl/certs/ca.pem
 
 # Update package list
 RUN apk update
