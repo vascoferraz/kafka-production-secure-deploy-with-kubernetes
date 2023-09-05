@@ -2,10 +2,10 @@ FROM osixia/phpldapadmin:0.9.0
 
 USER root
 
-COPY assets/certs/generated/phpldapadmin.pem /container/service/phpldapadmin/assets/apache2/certs/phpldapadmin.pem
-COPY assets/certs/generated/phpldapadmin-key.pem /container/service/phpldapadmin/assets/apache2/certs/phpldapadmin-key.pem
-COPY assets/certs/generated/ca.pem /container/service/phpldapadmin/assets/apache2/certs/ca.pem
+COPY assets/certificates/generated/phpldapadmin.pem /container/service/phpldapadmin/assets/apache2/certs/phpldapadmin.pem
+COPY assets/certificates/generated/phpldapadmin-key.pem /container/service/phpldapadmin/assets/apache2/certs/phpldapadmin-key.pem
+COPY assets/certificates/generated/ca.pem /container/service/phpldapadmin/assets/apache2/certs/ca.pem
 
-COPY assets/certs/generated/ldap.pem /container/service/ldap-client/assets/certs/ldap.pem
-COPY assets/certs/generated/ldap-key.pem /container/service/ldap-client/assets/certs/ldap-key.pem
-COPY assets/certs/generated/ca.pem /container/service/ldap-client/assets/certs/ca.pem
+COPY assets/certificates/generated/ldap.pem /container/service/ldap-client/assets/certs/ldap.pem
+COPY assets/certificates/generated/ldap-key.pem /container/service/ldap-client/assets/certs/ldap-key.pem
+COPY assets/certificates/generated/ca.pem /container/service/ldap-client/assets/certs/ca.pem
