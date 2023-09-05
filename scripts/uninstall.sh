@@ -29,3 +29,8 @@ helm delete postgresql
 helm delete mysql
 helm delete mariadb
 kubectl delete pvc data-postgresql-0 data-mysql-0 data-mariadb-0 ldap-config-ldap-0 ldap-data-ldap-0
+
+# Uninstall usecases
+../usecases/csv/teardown-csv.sh
+../usecases/datagen-credit_cards/teardown-datagen-credit_cards.sh
+../usecases/syslog/teardown-syslog.sh
