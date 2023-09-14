@@ -99,19 +99,12 @@ cfssl gencert -ca=$TUTORIAL_HOME/assets/certificates/generated/ca.pem \
 openssl x509 -in $TUTORIAL_HOME/assets/certificates/generated/mariadb.pem -text -noout
 
 # Create secret with TLS certificates for the OpenLDAP container
-kubectl delete secret ldap-sslcerts
-kubectl create secret generic ldap-sslcerts  \
+kubectl create secret generic ldap-sslcerts --save-config --dry-run=client \
   --from-file=ldap.pem=$TUTORIAL_HOME/assets/certificates/generated/ldap.pem \
   --from-file=ca.pem=$TUTORIAL_HOME/assets/certificates/generated/ca.pem \
   --from-file=ldap-key.pem=$TUTORIAL_HOME/assets/certificates/generated/ldap-key.pem \
-  --namespace confluent
-
-# Restart OpenLDAP pod but only if it already exists
-if [ "$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep ldap-0)" != "" ]; then
-  kubectl rollout restart deployment ldap
-else
-  echo "Pod ldap-0 does not exist."
-fi
+  -o yaml | \
+kubectl apply -f -
 
 # Deploy OpenLDAP
 helm upgrade --install ldap $TUTORIAL_HOME/assets/openldap --namespace confluent
@@ -119,57 +112,73 @@ kubectl wait --for=condition=Ready pod/ldap-0 --timeout=60s
 for i in 1 2 3 4 5; do kubectl --namespace confluent exec -it ldap-0 -- ldapsearch -LLL -x -H ldap://ldap.confluent.svc.cluster.local:389 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!' && break || sleep 15; done
 
 # Provide component TLS certificates
-kubectl create secret generic tls-group1 \
+kubectl create secret generic tls-group1 --save-config --dry-run=client \
   --from-file=fullchain.pem=$TUTORIAL_HOME/assets/certificates/generated/server.pem \
   --from-file=cacerts.pem=$TUTORIAL_HOME/assets/certificates/generated/ca.pem \
   --from-file=privkey.pem=$TUTORIAL_HOME/assets/certificates/generated/server-key.pem \
-  --namespace confluent
+  -o yaml | \
+kubectl apply -f -
 
 # Provide authentication credentials
-kubectl create secret generic credential \
+kubectl create secret generic credential --save-config --dry-run=client \
   --from-file=plain-users.json=$TUTORIAL_HOME/authentication-credentials/creds-kafka-sasl-users.json \
   --from-file=digest-users.json=$TUTORIAL_HOME/authentication-credentials/creds-zookeeper-sasl-digest-users.json \
   --from-file=digest.txt=$TUTORIAL_HOME/authentication-credentials/creds-kafka-zookeeper-credentials.txt \
   --from-file=plain.txt=$TUTORIAL_HOME/authentication-credentials/creds-client-kafka-sasl-user.txt \
   --from-file=basic.txt=$TUTORIAL_HOME/authentication-credentials/creds-control-center-users.txt \
   --from-file=ldap.txt=$TUTORIAL_HOME/authentication-credentials/ldap.txt \
-  --namespace confluent
+  -o yaml | \
+kubectl apply -f -
 
 # Provide RBAC principal credentials
-kubectl create secret generic mds-token \
+kubectl create secret generic mds-token --save-config --dry-run=client \
   --from-file=mdsPublicKey.pem=$TUTORIAL_HOME/assets/certificates/sources/mds-publickey.txt \
   --from-file=mdsTokenKeyPair.pem=$TUTORIAL_HOME/assets/certificates/sources/mds-tokenkeypair.txt \
-  --namespace confluent
+  -o yaml | \
+kubectl apply -f -
 
 # Kafka RBAC credential
-kubectl create secret generic mds-client \
+kubectl create secret generic mds-client --save-config --dry-run=client \
   --from-file=bearer.txt=$TUTORIAL_HOME/rbac-credentials/bearer.txt \
-  --namespace confluent
+  -o yaml | \
+kubectl apply -f -
+
 # Control Center RBAC credential
-kubectl create secret generic c3-mds-client \
+kubectl create secret generic c3-mds-client --save-config --dry-run=client \
   --from-file=bearer.txt=$TUTORIAL_HOME/rbac-credentials/c3-mds-client.txt \
-  --namespace confluent
+  -o yaml | \
+kubectl apply -f -
+
 # Connect RBAC credential
-kubectl create secret generic connect-mds-client \
+kubectl create secret generic connect-mds-client --save-config --dry-run=client \
   --from-file=bearer.txt=$TUTORIAL_HOME/rbac-credentials/connect-mds-client.txt \
-  --namespace confluent
+  -o yaml | \
+kubectl apply -f -
+
 # Schema Registry RBAC credential
-kubectl create secret generic sr-mds-client \
+kubectl create secret generic sr-mds-client --save-config --dry-run=client \
   --from-file=bearer.txt=$TUTORIAL_HOME/rbac-credentials/sr-mds-client.txt \
-  --namespace confluent
+  -o yaml | \
+kubectl apply -f -
+
 # ksqlDB RBAC credential
-kubectl create secret generic ksqldb-mds-client \
+kubectl create secret generic ksqldb-mds-client --save-config --dry-run=client \
   --from-file=bearer.txt=$TUTORIAL_HOME/rbac-credentials/ksqldb-mds-client.txt \
-  --namespace confluent
+  -o yaml | \
+kubectl apply -f -
+
 # Kafka Rest Proxy RBAC credential
-kubectl create secret generic krp-mds-client \
+kubectl create secret generic krp-mds-client --save-config --dry-run=client \
   --from-file=bearer.txt=$TUTORIAL_HOME/rbac-credentials/krp-mds-client.txt \
-  --namespace confluent
+  -o yaml | \
+kubectl apply -f -
+
 # Kafka REST credential
-kubectl create secret generic rest-credential \
+kubectl create secret generic rest-credential --save-config --dry-run=client \
   --from-file=bearer.txt=$TUTORIAL_HOME/rbac-credentials/bearer.txt \
   --from-file=basic.txt=$TUTORIAL_HOME/rbac-credentials/bearer.txt \
-  --namespace confluent
+  -o yaml | \
+kubectl apply -f -
 
 # Deploy Confluent Platform
 kubectl apply -f $TUTORIAL_HOME/manifests/confluent-platform-production.yaml --namespace confluent
@@ -192,21 +201,17 @@ kubectl apply -f $TUTORIAL_HOME/rolebindings/controlcenter-sr-rolebindings.yaml 
 kubectl exec -it kafka-0 -c kafka -- kafka-acls --bootstrap-server kafka.confluent.svc.cluster.local:9092 --command-config /opt/confluentinc/etc/kafka/kafka.properties --add --allow-principal User:connect --allow-host "*" --operation All --topic "*" --group "*"
 
 # Create secret with keystore and truststore for Kafka-UI container
-rm $TUTORIAL_HOME/assets/certificates/generated/keystore.p12
-rm $TUTORIAL_HOME/assets/certificates/generated/truststore.p12
-kubectl delete secrets kafkaui-pkcs12
-
 openssl pkcs12 -export -in $TUTORIAL_HOME/assets/certificates/generated/kafka-ui.pem -inkey $TUTORIAL_HOME/assets/certificates/generated/kafka-ui-key.pem -out $TUTORIAL_HOME/assets/certificates/generated/keystore.p12 -password pass:mystorepassword
-
 keytool -importcert -storetype PKCS12 -keystore $TUTORIAL_HOME/assets/certificates/generated/truststore.p12 -storepass mystorepassword -alias ca -file $TUTORIAL_HOME/assets/certificates/generated/ca.pem -noprompt
-
-kubectl create secret generic kafkaui-pkcs12 \
-    --from-file=cacerts.pem=$TUTORIAL_HOME/assets/certificates/generated/ca.pem \
-    --from-file=privkey.pem=$TUTORIAL_HOME/assets/certificates/generated/kafka-ui-key.pem \
-    --from-file=fullchain.pem=$TUTORIAL_HOME/assets/certificates/generated/kafka-ui.pem \
-    --from-literal=jksPassword.txt=jksPassword=mystorepassword \
-    --from-file=keystore.p12=$TUTORIAL_HOME/assets/certificates/generated/keystore.p12 \
-    --from-file=truststore.p12=$TUTORIAL_HOME/assets/certificates/generated/truststore.p12
+kubectl create secret generic kafkaui-pkcs12 --save-config --dry-run=client \
+  --from-file=cacerts.pem=$TUTORIAL_HOME/assets/certificates/generated/ca.pem \
+  --from-file=privkey.pem=$TUTORIAL_HOME/assets/certificates/generated/kafka-ui-key.pem \
+  --from-file=fullchain.pem=$TUTORIAL_HOME/assets/certificates/generated/kafka-ui.pem \
+  --from-literal=jksPassword.txt=jksPassword=mystorepassword \
+  --from-file=keystore.p12=$TUTORIAL_HOME/assets/certificates/generated/keystore.p12 \
+  --from-file=truststore.p12=$TUTORIAL_HOME/assets/certificates/generated/truststore.p12 \
+  -o yaml | \
+kubectl apply -f -
 
 # Deploy Kafka UI container
 helm upgrade --install kafka-ui kafka-ui/kafka-ui --version 0.7.4 -f $TUTORIAL_HOME/manifests/kafkaui-values.yaml
@@ -216,13 +221,6 @@ kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
 # Build custom phpLDAPadmin image
 docker build -t osixia/phpldapadmin-vf:0.9.0 --progress=plain -f $TUTORIAL_HOME/docker-images/phpldapadmin/Dockerfile ../
 
-# Restart phpLDAPadmin pod but only if it already exists
-if [ "$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep phpldapadmin)" != "" ]; then
-  kubectl rollout restart deployment phpldapadmin
-else
-  echo "Pod phpldapadmin does not exist."
-fi
-
 # Deploy phpLDAPadmin container
 helm upgrade --install phpldapadmin cetic/phpldapadmin --version 0.1.4  -f $TUTORIAL_HOME/manifests/phpldapadmin-values.yaml 
 pod_name=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep phpldapadmin)
@@ -230,30 +228,36 @@ kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
 kubectl patch service phpldapadmin -p '{"spec":{"ports":[{"name":"https","port":443,"nodePort":30902}]}}'
 
 # Create secret for PostgreSQL container
-kubectl create secret generic postgres-pkcs12 \
-    --from-file=cert.pem=$TUTORIAL_HOME/assets/certificates/generated/postgres.pem \
-    --from-file=cert.key=$TUTORIAL_HOME/assets/certificates/generated/postgres-key.pem \
-    --from-file=ca.pem=$TUTORIAL_HOME/assets/certificates/generated/ca.pem
+kubectl create secret generic postgres-pkcs12 --save-config --dry-run=client \
+  --from-file=cert.pem=$TUTORIAL_HOME/assets/certificates/generated/postgres.pem \
+  --from-file=cert.key=$TUTORIAL_HOME/assets/certificates/generated/postgres-key.pem \
+  --from-file=ca.pem=$TUTORIAL_HOME/assets/certificates/generated/ca.pem \
+  -o yaml | \
+kubectl apply -f -
 
 # Deploy PostgreSQL container
 helm upgrade --install postgresql bitnami/postgresql --version 12.10.0 -f $TUTORIAL_HOME/manifests/postgres-values.yaml
 kubectl wait --for=condition=Ready pod/postgresql-0 --timeout=60s
 
 # Create secret for MySQL container
-kubectl create secret generic mysql-pkcs12 \
-    --from-file=mysql.pem=$TUTORIAL_HOME/assets/certificates/generated/mysql.pem \
-    --from-file=mysql-key.pem=$TUTORIAL_HOME/assets/certificates/generated/mysql-key.pem \
-    --from-file=ca.pem=$TUTORIAL_HOME/assets/certificates/generated/ca.pem
+kubectl create secret generic mysql-pkcs12 --save-config --dry-run=client \
+  --from-file=mysql.pem=$TUTORIAL_HOME/assets/certificates/generated/mysql.pem \
+  --from-file=mysql-key.pem=$TUTORIAL_HOME/assets/certificates/generated/mysql-key.pem \
+  --from-file=ca.pem=$TUTORIAL_HOME/assets/certificates/generated/ca.pem \
+  -o yaml | \
+kubectl apply -f -
 
 # Deploy MySQL container
 helm upgrade --install mysql bitnami/mysql --version 9.12.1 -f $TUTORIAL_HOME/manifests/mysql-values.yaml
 kubectl wait --for=condition=Ready pod/mysql-0 --timeout=60s
 
 # Create secret for MariaDB container
-kubectl create secret generic mariadb-pkcs12 \
-    --from-file=mariadb.pem=$TUTORIAL_HOME/assets/certificates/generated/mariadb.pem \
-    --from-file=mariadb-key.pem=$TUTORIAL_HOME/assets/certificates/generated/mariadb-key.pem \
-    --from-file=ca.pem=$TUTORIAL_HOME/assets/certificates/generated/ca.pem
+kubectl create secret generic mariadb-pkcs12 --save-config --dry-run=client \
+  --from-file=mariadb.pem=$TUTORIAL_HOME/assets/certificates/generated/mariadb.pem \
+  --from-file=mariadb-key.pem=$TUTORIAL_HOME/assets/certificates/generated/mariadb-key.pem \
+  --from-file=ca.pem=$TUTORIAL_HOME/assets/certificates/generated/ca.pem \
+  -o yaml | \
+kubectl apply -f -
 
 # Deploy MariaDB container
 helm upgrade --install mariadb bitnami/mariadb --version 13.1.2 -f $TUTORIAL_HOME/manifests/mariadb-values.yaml
