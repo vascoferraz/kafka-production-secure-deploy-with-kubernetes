@@ -14,4 +14,4 @@ COPY assets/certificates/generated/ca.pem /container/service/ldap-client/assets/
 RUN echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9 6ED0E7B82643E131
 RUN apt update
-RUN apt install -y ldap-utils -t buster-backports
+RUN apt install -y ldap-utils=2.4.57+dfsg-3+deb11u1~bpo10+1 -t buster-backports
