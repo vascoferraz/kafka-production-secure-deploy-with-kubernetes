@@ -9,7 +9,7 @@ RUN confluent-hub install --no-prompt confluentinc/kafka-connect-syslog:1.5.4
 RUN confluent-hub install --no-prompt jcustenborder/kafka-connect-spooldir:2.0.65
 
 # Reference: https://www.confluent.io/hub/confluentinc/kafka-connect-jdbc
-RUN confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.7.3
+RUN confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.7.4
 
 # Reference: https://www.confluent.io/hub/confluentinc/kafka-connect-datagen
 RUN confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.6.0
