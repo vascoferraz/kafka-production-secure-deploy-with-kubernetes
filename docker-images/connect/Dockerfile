@@ -12,7 +12,7 @@ RUN confluent-hub install --no-prompt jcustenborder/kafka-connect-spooldir:2.0.6
 RUN confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.7.4
 
 # Reference: https://www.confluent.io/hub/confluentinc/kafka-connect-datagen
-RUN confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.6.0
+RUN confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.6.2
 
 # Download the JDBC Type 4 driver for MySQL
 RUN curl https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.0.33/mysql-connector-j-8.0.33.jar > /usr/share/confluent-hub-components/confluentinc-kafka-connect-jdbc/lib/mysql-connector-j-8.0.33.jar
