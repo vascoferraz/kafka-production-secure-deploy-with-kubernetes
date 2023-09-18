@@ -225,7 +225,7 @@ docker build -t osixia/phpldapadmin-vf:0.9.0 --progress=plain -f $TUTORIAL_HOME/
 helm upgrade --install phpldapadmin cetic/phpldapadmin --version 0.1.4  -f $TUTORIAL_HOME/manifests/phpldapadmin-values.yaml 
 pod_name=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep phpldapadmin)
 kubectl wait --for=condition=Ready pod/${pod_name} --timeout=60s
-kubectl patch service phpldapadmin -p '{"spec":{"ports":[{"name":"https","port":443,"nodePort":30902}]}}'
+kubectl patch service phpldapadmin -p '{"spec": {"ports": [{"name": "https","port": 443,"nodePort": 30902}]}}'
 kubectl patch deployment phpldapadmin -p '{"spec": {"template": {"spec": {"containers": [{"name": "phpldapadmin", "args": ["--copy-service", "--loglevel=debug"]}]}}}}'
 
 # Create secret for PostgreSQL container

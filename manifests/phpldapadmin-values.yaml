@@ -18,7 +18,7 @@ service:
   type: NodePort
   # The nodePort is defined through a 'kubectl patch' command in the install script because this Helm chart does not support setting the nodePort in the values file.
   # Please find below the exact command used in the install script (scripts/install.sh)."
-  # kubectl patch service phpldapadmin -p '{"spec":{"ports":[{"name":"https","port":443,"nodePort":30902}]}}'
+  # kubectl patch service phpldapadmin -p '{"spec": {"ports": [{"name": "https","port": 443,"nodePort": 30902}]}}'
 
 readinessProbe:
     httpGet:
