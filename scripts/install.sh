@@ -249,7 +249,7 @@ kubectl create secret generic mysql-pkcs12 --save-config --dry-run=client \
 kubectl apply -f -
 
 # Deploy MySQL container
-helm upgrade --install mysql bitnami/mysql --version 9.12.1 -f $TUTORIAL_HOME/manifests/mysql-values.yaml
+helm upgrade --install mysql bitnami/mysql --version 9.12.3 -f $TUTORIAL_HOME/manifests/mysql-values.yaml
 kubectl wait --for=condition=Ready pod/mysql-0 --timeout=60s
 
 # Create secret for MariaDB container
