@@ -1,5 +1,5 @@
 name: ldap
-image: osixia/openldap:1.5.0
+image: osixia/openldap:develop-dev
 tls:
   enabled: true
 
@@ -12,6 +12,7 @@ env:
   LDAP_READONLY_USER_USERNAME: "mds"
   LDAP_READONLY_USER_PASSWORD: "Developer!"
   LDAP_BASE_DN: "dc=test,dc=com"
+  LDAP_OPT_DEBUG_LEVEL: 7
 
 # Adding integer before ldif name to allow sequence order.
 ldifs:
