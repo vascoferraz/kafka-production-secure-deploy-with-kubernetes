@@ -13,6 +13,7 @@ env:
   PHPLDAPADMIN_LDAP_CLIENT_TLS_CA_CRT_FILENAME: "ca.pem"
   PHPLDAPADMIN_LDAP_CLIENT_TLS_CRT_FILENAME: "server.pem"
   PHPLDAPADMIN_LDAP_CLIENT_TLS_KEY_FILENAME: "server-key.pem"
+  CONTAINER_SERVICE_DIR: "/container/service"
   
 service:
   type: NodePort
