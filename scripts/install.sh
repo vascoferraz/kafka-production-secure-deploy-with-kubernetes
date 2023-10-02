@@ -109,7 +109,16 @@ kubectl apply -f -
 # Deploy OpenLDAP
 helm upgrade --install ldap $TUTORIAL_HOME/assets/openldap --namespace confluent
 kubectl wait --for=condition=Ready pod/ldap-0 --timeout=60s
-for i in 1 2 3 4 5; do kubectl --namespace confluent exec -it ldap-0 -- ldapsearch -LLL -x -H ldap://ldap.confluent.svc.cluster.local:389 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!' && break || sleep 15; done
+
+# Query the OpenLDAP server
+while true; do
+  kubectl --namespace confluent exec -it ldap-0 -- ldapsearch -LLL -x -H ldap://ldap.confluent.svc.cluster.local:389 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!'
+  if [ $? -eq 0 ]; then
+    break  # If the command succeeds (exit code 0), exit the loop.
+  else
+    sleep 15  # If the command fails (exit code not 0), wait for 15 seconds and then retry.
+  fi
+done
 
 # Provide component TLS certificates
 kubectl create secret generic tls-group1 --save-config --dry-run=client \
