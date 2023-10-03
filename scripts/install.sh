@@ -229,7 +229,7 @@ kubectl exec -it kafka-0 -c kafka -- kafka-acls --bootstrap-server kafka.conflue
 openssl pkcs12 -export -in "${CERT_OUT_DIR}/kafka-ui.pem" -inkey "${CERT_OUT_DIR}/kafka-ui-key.pem" -out "${CERT_OUT_DIR}/keystore.p12" -password pass:mystorepassword
 keytool -importcert -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass mystorepassword -alias ca -file "${CA_CERT_PATH}" -noprompt
 kubectl create secret generic kafkaui-pkcs12 --save-config --dry-run=client \
-  --from-file=cacerts.pem="${CA_CERT_PATH}" \
+  --from-file=cacerts.pem="${CA_CERT_PATH}/ca.pem" \
   --from-file=privkey.pem="${CERT_OUT_DIR}/kafka-ui-key.pem" \
   --from-file=fullchain.pem="${CERT_OUT_DIR}/kafka-ui.pem" \
   --from-literal=jksPassword.txt=jksPassword=mystorepassword \
