@@ -125,7 +125,16 @@ kubectl apply -f -
 # Deploy OpenLDAP
 helm upgrade --install ldap ${TUTORIAL_HOME}/assets/openldap --namespace confluent
 kubectl wait --for=condition=Ready pod/ldap-0 --timeout=60s
-for i in 1 2 3 4 5; do kubectl --namespace confluent exec -it ldap-0 -- ldapsearch -LLL -x -H ldap://ldap.confluent.svc.cluster.local:389 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!' && break || sleep 15; done
+
+# Query the OpenLDAP server
+while true; do
+  kubectl --namespace confluent exec -it ldap-0 -- ldapsearch -LLL -x -H ldap://ldap.confluent.svc.cluster.local:389 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!'
+  if [ $? -eq 0 ]; then
+    break  # If the command succeeds (exit code 0), exit the loop.
+  else
+    sleep 15  # If the command fails (exit code not 0), wait for 15 seconds and then retry.
+  fi
+done
 
 # Provide component TLS certificates
 kubectl create secret generic tls-group1 --save-config --dry-run=client \
@@ -253,7 +262,7 @@ kubectl create secret generic postgres-pkcs12 --save-config --dry-run=client \
 kubectl apply -f -
 
 # Deploy PostgreSQL container
-helm upgrade --install postgresql bitnami/postgresql --version 12.10.0 -f "${TUTORIAL_HOME}/manifests/postgres-values.yaml"
+helm upgrade --install postgresql bitnami/postgresql --version 13.0.0 -f "${TUTORIAL_HOME}/manifests/postgres-values.yaml"
 kubectl wait --for=condition=Ready pod/postgresql-0 --timeout=60s
 
 # Create secret for MySQL container
@@ -265,7 +274,7 @@ kubectl create secret generic mysql-pkcs12 --save-config --dry-run=client \
 kubectl apply -f -
 
 # Deploy MySQL container
-helm upgrade --install mysql bitnami/mysql --version 9.12.1 -f "${TUTORIAL_HOME}/manifests/mysql-values.yaml"
+helm upgrade --install mysql bitnami/mysql --version 9.12.3 -f "${TUTORIAL_HOME}/manifests/mysql-values.yaml"
 kubectl wait --for=condition=Ready pod/mysql-0 --timeout=60s
 
 # Create secret for MariaDB container
@@ -277,7 +286,7 @@ kubectl create secret generic mariadb-pkcs12 --save-config --dry-run=client \
 kubectl apply -f -
 
 # Deploy MariaDB container
-helm upgrade --install mariadb bitnami/mariadb --version 13.1.2 -f ${TUTORIAL_HOME}/manifests/mariadb-values.yaml
+helm upgrade --install mariadb bitnami/mariadb --version 13.1.3 -f "${TUTORIAL_HOME}/manifests/mariadb-values.yaml"
 kubectl wait --for=condition=Ready pod/mariadb-0 --timeout=60s
 
 # Build and deploy Alpine container used for debug

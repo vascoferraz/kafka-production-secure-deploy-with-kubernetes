@@ -55,7 +55,7 @@ psql "host=localhost port=5432 user=postgres password=change-me dbname=postgres"
 #### From inside the PostgreSQL container with TLS:
 ```sh
 kubectl exec -it postgresql-0 -c postgresql -- bash
-psql "host=localhost port=5432 user=postgres password=change-me dbname=postgres sslmode=verify-full sslrootcert=/opt/bitnami/postgresql/certificates/ca.pem sslcert=/opt/bitnami/postgresql/certificates/cert.pem sslkey=/opt/bitnami/postgresql/certificates/cert.key"
+psql "host=localhost port=5432 user=postgres password=change-me dbname=postgres sslmode=verify-full sslrootcert=/opt/bitnami/postgresql/certs/ca.pem sslcert=/opt/bitnami/postgresql/certs/cert.pem sslkey=/opt/bitnami/postgresql/certs/cert.key"
 ```
 
 #### How to disable non-secure connections on PostgreSQL:
