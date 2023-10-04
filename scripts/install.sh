@@ -16,7 +16,7 @@ CA_KEY_PATH="${CERT_OUT_DIR}/ca-key.pem"
 CA_CONFIG_PATH="${CERT_SRC_DIR}/ca-config.json"
 
 # Install dependencies on Mac OS
-brew install cfssl mysql java
+brew cfssl helm install java mysql postgresql@16
 # echo 'export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"' >> ~/.zshrc
 PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
@@ -41,7 +41,7 @@ kubectl config set-context --current --namespace=confluent
 # Deploy Confluent for Kubernetes
 helm upgrade --install --version 0.824.2 operator confluentinc/confluent-for-kubernetes
 CONFLUENT_OPERATOR_POD_NAME=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep confluent-operator)
-kubectl wait --for=condition=Ready pod/${CONFLUENT_OPERATOR_POD_NAME} --timeout=60s
+kubectl wait --for=condition=Ready pod/${CONFLUENT_OPERATOR_POD_NAME} --timeout=600s
 
 # Create Certificate Authority
 mkdir "${CERT_OUT_DIR}" && cfssl gencert -initca "${CERT_SRC_DIR}/ca-csr.json" | cfssljson -bare "${CERT_OUT_DIR}/ca" -
@@ -64,12 +64,11 @@ kubectl create secret generic ldap-sslcerts --save-config --dry-run=client \
   --from-file=ldap.pem="${CERT_OUT_DIR}/ldap.pem" \
   --from-file=ca.pem="${CA_CERT_PATH}" \
   --from-file=ldap-key.pem="${CERT_OUT_DIR}/ldap-key.pem" \
-  -o yaml | \
-kubectl apply -f -
+  -o yaml | kubectl apply -f -
 
 # Deploy OpenLDAP
 helm upgrade --install ldap ${TUTORIAL_HOME}/assets/openldap
-kubectl wait --for=condition=Ready pod/ldap-0 --timeout=60s
+kubectl wait --for=condition=Ready pod/ldap-0 --timeout=600s
 
 # Query the OpenLDAP server
 SEARCH_CMD=(ldapsearch -LLL -x -H ldap://ldap.confluent.svc.cluster.local:389 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!')

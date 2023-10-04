@@ -26,7 +26,7 @@ SECRETS=(
     krp-mds-client
     ksqldb-mds-client
     ldap-sslcerts
-    mariadb-PKCS12
+    mariadb-pkcs12
     mds-client 
     mds-token
     mysql-pkcs12
