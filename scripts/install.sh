@@ -39,11 +39,14 @@ helm repo add cetic https://cetic.github.io/helm-charts
 helm repo update
 
 # Deploy Confluent for Kubernetes
-kubectl create namespace confluent
+kubectl create namespace confluent --dry-run=client -o yaml | kubectl apply -f -
 kubectl config set-context --current --namespace=confluent
 helm upgrade --install operator confluentinc/confluent-for-kubernetes --namespace confluent
 CONFLUENT_OPERATOR_POD_NAME=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep confluent-operator)
-kubectl wait --for=condition=Ready pod/${CONFLUENT_OPERATOR_POD_NAME} --timeout=60s
+until kubectl wait --for=condition=Ready pod/${CONFLUENT_OPERATOR_POD_NAME} --timeout=60s; do
+  echo echo Waiting for ${CONFLUENT_OPERATOR_POD_NAME} to be ready...
+  sleep 1
+done
 
 # Create Certificate Authority
 mkdir "${CERT_OUT_DIR}" && cfssl gencert -initca "${CERT_SRC_DIR}/ca-csr.json" | cfssljson -bare "${CERT_OUT_DIR}/ca" -
@@ -123,17 +126,16 @@ kubectl create secret generic ldap-sslcerts --save-config --dry-run=client \
 kubectl apply -f -
 
 # Deploy OpenLDAP
-helm upgrade --install ldap ${TUTORIAL_HOME}/assets/openldap --namespace confluent
-kubectl wait --for=condition=Ready pod/ldap-0 --timeout=60s
+helm upgrade --install ldap "${TUTORIAL_HOME}/assets/openldap" --namespace confluent
+until kubectl wait --for=condition=Ready pod/ldap-0 --timeout=60s; do
+  echo echo Waiting for ldap-0 to be ready...
+  sleep 1
+done
 
 # Query the OpenLDAP server
-while true; do
-  kubectl --namespace confluent exec -it ldap-0 -- ldapsearch -LLL -x -H ldap://ldap.confluent.svc.cluster.local:389 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!'
-  if [ $? -eq 0 ]; then
-    break  # If the command succeeds (exit code 0), exit the loop.
-  else
-    sleep 15  # If the command fails (exit code not 0), wait for 15 seconds and then retry.
-  fi
+until kubectl --namespace confluent exec -it ldap-0 -- ldapsearch -LLL -x -H ldap://ldap.confluent.svc.cluster.local:389 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!'; do
+  echo Retrying in 10 seconds...
+  sleep 10
 done
 
 # Provide component TLS certificates
@@ -209,11 +211,14 @@ kubectl create secret generic rest-credential --save-config --dry-run=client \
 kubectl apply -f -
 
 # Deploy Confluent Platform
-kubectl apply -f ${TUTORIAL_HOME}/manifests/confluent-platform-production.yaml --namespace confluent
+kubectl apply -f "${TUTORIAL_HOME}/manifests/confluent-platform-production.yaml" --namespace confluent
 sleep 15
 PODS=(zookeeper-0 kafka-0 kafka-1 kafka-2 connect-0 schemaregistry-0 ksqldb-0 controlcenter-0)
 for pod in ${PODS[@]}; do
-    kubectl wait --for=condition=Ready --timeout=600s pod/${pod}
+    until kubectl wait --for=condition=Ready --timeout=600s pod/${pod}; do
+      echo echo Waiting for ${pod} to be ready...
+      sleep 1
+    done
 done
 
 # Create RBAC Rolebindings for Control Center admin
@@ -227,6 +232,7 @@ kubectl exec -it kafka-0 -c kafka -- kafka-acls --bootstrap-server kafka.conflue
 
 # Create secret with keystore and truststore for Kafka-UI container
 openssl pkcs12 -export -in "${CERT_OUT_DIR}/kafka-ui.pem" -inkey "${CERT_OUT_DIR}/kafka-ui-key.pem" -out "${CERT_OUT_DIR}/keystore.p12" -password pass:mystorepassword
+keytool -delete -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass mystorepassword -alias ca -noprompt
 keytool -importcert -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass mystorepassword -alias ca -file "${CA_CERT_PATH}" -noprompt
 kubectl create secret generic kafkaui-pkcs12 --save-config --dry-run=client \
   --from-file=cacerts.pem="${CA_CERT_PATH}" \
@@ -241,7 +247,10 @@ kubectl apply -f -
 # Deploy Kafka UI container
 helm upgrade --install kafka-ui kafka-ui/kafka-ui --version 0.7.4 -f "${TUTORIAL_HOME}/manifests/kafkaui-values.yaml"
 POD_NAME=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep kafka-ui)
-kubectl wait --for=condition=Ready pod/${POD_NAME} --timeout=60s
+until kubectl wait --for=condition=Ready pod/${POD_NAME} --timeout=60s; do
+  echo Waiting for ${POD_NAME} to be ready...
+  sleep 1
+done
 
 # Build custom phpLDAPadmin image
 docker build -t osixia/phpldapadmin-vf:0.9.0 --progress=plain -f "${DOCKER_IMAGE_DIR}/phpldapadmin/Dockerfile" ../
@@ -249,7 +258,10 @@ docker build -t osixia/phpldapadmin-vf:0.9.0 --progress=plain -f "${DOCKER_IMAGE
 # Deploy phpLDAPadmin container
 helm upgrade --install phpldapadmin cetic/phpldapadmin --version 0.1.4  -f "${TUTORIAL_HOME}/manifests/phpldapadmin-values.yaml"
 POD_NAME=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep phpldapadmin)
-kubectl wait --for=condition=Ready pod/${POD_NAME} --timeout=60s
+until kubectl wait --for=condition=Ready pod/${POD_NAME} --timeout=60s; do
+  echo Waiting for ${POD_NAME} to be ready...
+  sleep 1
+done
 kubectl patch service phpldapadmin -p '{"spec": {"ports": [{"name": "https","port": 443,"nodePort": 30902}]}}'
 kubectl patch deployment phpldapadmin -p '{"spec": {"template": {"spec": {"containers": [{"name": "phpldapadmin", "args": ["--copy-service", "--loglevel=debug"]}]}}}}'
 
@@ -263,7 +275,10 @@ kubectl apply -f -
 
 # Deploy PostgreSQL container
 helm upgrade --install postgresql bitnami/postgresql --version 13.0.0 -f "${TUTORIAL_HOME}/manifests/postgres-values.yaml"
-kubectl wait --for=condition=Ready pod/postgresql-0 --timeout=60s
+until kubectl wait --for=condition=Ready pod/postgresql-0 --timeout=60s; do
+  echo Waiting for postgresql-0 to be ready...
+  sleep 1
+done
 
 # Create secret for MySQL container
 kubectl create secret generic mysql-pkcs12 --save-config --dry-run=client \
@@ -275,7 +290,10 @@ kubectl apply -f -
 
 # Deploy MySQL container
 helm upgrade --install mysql bitnami/mysql --version 9.12.3 -f "${TUTORIAL_HOME}/manifests/mysql-values.yaml"
-kubectl wait --for=condition=Ready pod/mysql-0 --timeout=60s
+until kubectl wait --for=condition=Ready pod/mysql-0 --timeout=60s; do
+  echo Waiting for mysql-0 to be ready...
+  sleep 1
+done
 
 # Create secret for MariaDB container
 kubectl create secret generic mariadb-pkcs12 --save-config --dry-run=client \
@@ -287,9 +305,15 @@ kubectl apply -f -
 
 # Deploy MariaDB container
 helm upgrade --install mariadb bitnami/mariadb --version 13.1.3 -f "${TUTORIAL_HOME}/manifests/mariadb-values.yaml"
-kubectl wait --for=condition=Ready pod/mariadb-0 --timeout=60s
+until kubectl wait --for=condition=Ready pod/mariadb-0 --timeout=60s; do
+  echo Waiting for mariadb-0 to be ready...
+  sleep 1
+done
 
 # Build and deploy Alpine container used for debug
 docker build -t alpine-debug:3.18.3 --progress=plain -f "${DOCKER_IMAGE_DIR}/alpine-debug/Dockerfile" ../
-kubectl apply -f ${TUTORIAL_HOME}/manifests/alpine-debug.yaml
-kubectl wait --for=condition=Ready pod/alpine-debug --timeout=60s
+kubectl apply -f "${TUTORIAL_HOME}/manifests/alpine-debug.yaml"
+until kubectl wait --for=condition=Ready pod/alpine-debug --timeout=60s; do
+  echo Waiting for alpine-debug to be ready...
+  sleep 1
+done
