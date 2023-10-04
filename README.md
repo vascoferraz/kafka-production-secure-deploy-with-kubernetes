@@ -2,22 +2,16 @@
 This is an enhanced version of a tutorial from the official Confluent [repository](https://github.com/confluentinc/confluent-kubernetes-examples), specifically focusing on the [production-secure-deploy](https://github.com/confluentinc/confluent-kubernetes-examples/tree/master/security/production-secure-deploy) section. In this improved tutorial, I've introduced additional features and tools, such as PostgreSQL, MySQL, and MariaDB databases, Kafka-UI, and phpLDAPadmin, along with various production-like use cases.
 
 ## Deploy and tear down the Kafka cluster
-To deploy and tear down the Kafka cluster on your local machine just run the following scripts, but before proceeding with the deployment of the Kafka cluster, it is necessary to adjust the permissions of both scripts ([install](scripts/install.sh) and [uninstall](scripts/uninstall.sh)) to grant them execute permissions.
-
-```sh
-cd scripts
-chmod +x install.sh
-chmod +x uninstall.sh
-```
+To deploy and tear down the Kafka cluster on your local machine just run the following scripts.
 
 To deploy the Kafka cluster execute the install script:
 ```sh
-./install.sh  
+./script/install.sh  
  ```
 
  To tear down the Kafka cluster execute the uninstall script:
 ```sh
-./uninstall.sh 
+./script/uninstall.sh 
  ```
 
 ## Access Control Center
