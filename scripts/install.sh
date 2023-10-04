@@ -16,7 +16,7 @@ CA_KEY_PATH="${CERT_OUT_DIR}/ca-key.pem"
 CA_CONFIG_PATH="${CERT_SRC_DIR}/ca-config.json"
 
 # Install dependencies on Mac OS
-brew install cfssl helm install java mysql postgresql@16
+brew install cfssl helm java mysql postgresql@16
 # echo 'export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"' >> ~/.zshrc
 PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
@@ -35,7 +35,7 @@ helm repo add cetic https://cetic.github.io/helm-charts
 helm repo update
 
 # Create namespace and set context to it 
-kubectl create namespace confluent
+kubectl create namespace confluent --dry-run=client -o yaml | kubectl apply -f -
 kubectl config set-context --current --namespace=confluent
 
 # Deploy Confluent for Kubernetes
@@ -67,7 +67,7 @@ kubectl create secret generic ldap-sslcerts --save-config --dry-run=client \
   -o yaml | kubectl apply -f -
 
 # Deploy OpenLDAP
-helm upgrade --install ldap ${TUTORIAL_HOME}/assets/openldap
+helm upgrade --install ldap "${TUTORIAL_HOME}/assets/openldap"
 kubectl wait --for=condition=Ready pod/ldap-0 --timeout=600s
 
 # Query the OpenLDAP server
@@ -139,7 +139,17 @@ kubectl exec -it kafka-0 -c kafka -- kafka-acls --bootstrap-server kafka.conflue
 # Create secret with keystore and truststore for Kafka-UI container
 STORE_PASSWORD="mystorepassword"
 openssl pkcs12 -export -in "${CERT_OUT_DIR}/kafka-ui.pem" -inkey "${CERT_OUT_DIR}/kafka-ui-key.pem" -out "${CERT_OUT_DIR}/keystore.p12" -password pass:"${STORE_PASSWORD}"
-keytool -importcert -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass "${STORE_PASSWORD}" -alias ca -file "${CA_CERT_PATH}" -noprompt
+if keytool -list -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass "${STORE_PASSWORD}" -alias ca >/dev/null 2>&1; then
+  # The "ca" alias exists, so delete it and create a new one
+  keytool -delete -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass "${STORE_PASSWORD}" -alias ca -noprompt
+  echo "Alias 'ca' deleted from the keystore."
+  keytool -importcert -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass "${STORE_PASSWORD}" -alias ca -file "${CA_CERT_PATH}" -noprompt
+  echo "Alias 'ca' imported to the keystore."
+else
+  # The "ca" alias does not exist
+  keytool -importcert -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass "${STORE_PASSWORD}" -alias ca -file "${CA_CERT_PATH}" -noprompt
+  echo "Alias 'ca' imported to the keystore."
+fi
 kubectl create secret generic kafkaui-pkcs12 --save-config --dry-run=client \
   --from-file=cacerts.pem="${CA_CERT_PATH}" \
   --from-file=privkey.pem="${CERT_OUT_DIR}/kafka-ui-key.pem" \

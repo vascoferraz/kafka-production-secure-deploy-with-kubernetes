@@ -11,7 +11,7 @@ kubectl config set-context --current --namespace=confluent
 
 for rb in $(kubectl -n confluent get cfrb --no-headers -ojsonpath='{.items[*].metadata.name}')
 do
-    kubectl -n confluent  patch cfrb $rb -p '{"metadata":{"finalizers":[]}}' --type=merge
+    kubectl -n confluent patch cfrb $rb -p '{"metadata":{"finalizers":[]}}' --type=merge
 done
 
 kubectl delete confluentrolebinding --all
