@@ -17,7 +17,7 @@ CA_KEY_PATH="${CERT_OUT_DIR}/ca-key.pem"
 CA_CONFIG_PATH="${CERT_SRC_DIR}/ca-config.json"
 
 # Install dependencies on Mac OS
-brew install cfssl mysql java
+brew install cfssl helm java postgresql@16 mysql
 
 # echo 'export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"' >> ~/.zshrc
 PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
