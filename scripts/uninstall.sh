@@ -31,7 +31,7 @@ SECRETS=(
     kafkaui-pkcs12
     postgres-pkcs12
     mysql-pkcs12
-    mariadb-PKCS12
+    mariadb-pkcs12
 )
 for secret in ${SECRETS[@]}; do
     kubectl delete --ignore-not-found=true secret ${secret}
