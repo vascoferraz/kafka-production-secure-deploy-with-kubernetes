@@ -5,7 +5,7 @@ metadata:
   namespace: confluent
 spec:
   containers:
-  - image: alpine-debug:3.18.3
+  - image: alpine-debug:3.18.4
     command:
       - /bin/sh
       - "-c"

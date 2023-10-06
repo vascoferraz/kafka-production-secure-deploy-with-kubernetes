@@ -211,6 +211,6 @@ helm upgrade --install mariadb bitnami/mariadb --version 13.1.3 -f "${TUTORIAL_H
 kubectl wait --for=condition=Ready pod/mariadb-0 --timeout=600s
 
 # Build and deploy Alpine container used for debug
-docker build -t alpine-debug:3.18.3 --progress=plain -f "${DOCKER_IMAGE_DIR}/alpine-debug/Dockerfile" "${TUTORIAL_HOME}"
+docker build -t alpine-debug:3.18.4 --progress=plain -f "${DOCKER_IMAGE_DIR}/alpine-debug/Dockerfile" "${TUTORIAL_HOME}"
 kubectl apply -f "${TUTORIAL_HOME}/manifests/alpine-debug.yaml"
 kubectl wait --for=condition=Ready pod/alpine-debug --timeout=600s
