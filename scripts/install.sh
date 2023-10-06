@@ -21,11 +21,11 @@ brew install cfssl helm java mysql postgresql@16
 PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
 # Build custom Kafka Broker image
-docker build -t confluentinc/cp-server-vf:7.5.0 "${DOCKER_IMAGE_DIR}/kafka"
+docker build -t confluentinc/cp-server-vf:7.5.1 "${DOCKER_IMAGE_DIR}/kafka"
 # Build custom Kafka Connect image
-docker build -t confluentinc/cp-server-connect-vf:7.5.0 "${DOCKER_IMAGE_DIR}/connect"
+docker build -t confluentinc/cp-server-connect-vf:7.5.1 "${DOCKER_IMAGE_DIR}/connect"
 # Build custom Schema Registry image
-docker build -t confluentinc/cp-schema-registry-vf:7.5.0 "${DOCKER_IMAGE_DIR}/schema-registry"
+docker build -t confluentinc/cp-schema-registry-vf:7.5.1 "${DOCKER_IMAGE_DIR}/schema-registry"
 
 # Add and update helm repositories
 helm repo add confluentinc https://packages.confluent.io/helm

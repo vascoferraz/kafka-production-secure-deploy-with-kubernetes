@@ -1,4 +1,4 @@
-FROM confluentinc/cp-schema-registry:7.5.0
+FROM confluentinc/cp-schema-registry:7.5.1
 
 USER root
 
