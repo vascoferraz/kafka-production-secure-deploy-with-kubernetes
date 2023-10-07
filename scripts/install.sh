@@ -160,7 +160,7 @@ kubectl create secret generic kafkaui-pkcs12 --save-config --dry-run=client \
   -o yaml | kubectl apply -f -
 
 # Deploy Kafka UI container
-helm upgrade --install kafka-ui kafka-ui/kafka-ui --version 0.7.4 -f "${TUTORIAL_HOME}/manifests/kafkaui-values.yaml"
+helm upgrade --install kafka-ui kafka-ui/kafka-ui --version 0.7.5 -f "${TUTORIAL_HOME}/manifests/kafkaui-values.yaml" --set "image.repository=provectuslabs/kafka-ui,image.tag=master"
 POD_NAME=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep kafka-ui)
 kubectl wait --for=condition=Ready pod/${POD_NAME} --timeout=600s
 
