@@ -55,7 +55,7 @@ done
 kubectl delete --ignore-not-found=true --timeout=120s namespace confluent
 
 # Remove generated certificates
-CERT_OUT_DIR="${TUTORIAL_HOME}/assets/certificates/generated"
+CERT_OUT_DIR="${TUTORIAL_HOME}/certificates/generated"
 rm -rf "${CERT_OUT_DIR}"
 
 # Uninstall usecases

@@ -38,7 +38,7 @@ In this step, you will create:
 
 1. Generate a private key called ca-key.pem and the Certificate Authority (CA) certificate called ca.pem.
 ```
-mkdir $TUTORIAL_HOME/assets/certificates/generated && cfssl gencert -initca $TUTORIAL_HOME/assets/certificates/sources/ca-csr.json | cfssljson -bare $TUTORIAL_HOME/assets/certificates/generated/ca -
+mkdir $TUTORIAL_HOME/certificates/generated && cfssl gencert -initca $TUTORIAL_HOME/certificates/sources/ca-csr.json | cfssljson -bare $TUTORIAL_HOME/certificates/generated/ca -
 ```
 
 2. Check the validitity of the CA
@@ -52,13 +52,13 @@ In this series of steps, you will create all component certificates private and 
 
 ### Create all component certificates
 ```
-cfssl gencert -ca=$TUTORIAL_HOME/assets/certificates/generated/ca.pem \
--ca-key=$TUTORIAL_HOME/assets/certificates/generated/ca-key.pem \
--config=$TUTORIAL_HOME/assets/certificates/sources/ca-config.json \
--profile=server $TUTORIAL_HOME/assets/certificates/sources/<component>-domain.json | cfssljson -bare $TUTORIAL_HOME/assets/certificates/generated/<component>
+cfssl gencert -ca=$TUTORIAL_HOME/certificates/generated/ca.pem \
+-ca-key=$TUTORIAL_HOME/certificates/generated/ca-key.pem \
+-config=$TUTORIAL_HOME/certificates/sources/ca-config.json \
+-profile=server $TUTORIAL_HOME/certificates/sources/<component>-domain.json | cfssljson -bare $TUTORIAL_HOME/certificates/generated/<component>
 ```
 
 ### Check the validity of all component certificates
 ```
-openssl x509 -in $TUTORIAL_HOME/assets/certificates/generated/<component>.pem -text -noout
+openssl x509 -in $TUTORIAL_HOME/certificates/generated/<component>.pem -text -noout
 ```
