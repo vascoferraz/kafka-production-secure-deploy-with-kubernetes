@@ -6,8 +6,8 @@ BIN_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # Set the current tutorial directory
 TUTORIAL_HOME="$(realpath "${BIN_DIR}/..")"
 
-CERT_SRC_DIR="${TUTORIAL_HOME}/assets/certificates/sources"
-CERT_OUT_DIR="${TUTORIAL_HOME}/assets/certificates/generated"
+CERT_SRC_DIR="${TUTORIAL_HOME}/certificates/sources"
+CERT_OUT_DIR="${TUTORIAL_HOME}/certificates/generated"
 
 DOCKER_IMAGE_DIR="${TUTORIAL_HOME}/docker-images"
 
@@ -67,7 +67,7 @@ kubectl create secret generic ldap-sslcerts --save-config --dry-run=client \
   -o yaml | kubectl apply -f -
 
 # Deploy OpenLDAP
-helm upgrade --install ldap "${TUTORIAL_HOME}/assets/openldap"
+helm upgrade --install ldap "${TUTORIAL_HOME}/manifests/openldap"
 kubectl wait --for=condition=Ready pod/ldap-0 --timeout=600s
 
 # Query the OpenLDAP server

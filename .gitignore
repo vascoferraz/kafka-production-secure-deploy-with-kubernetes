@@ -1,4 +1,4 @@
 .idea
 .vscode/settings.json
-assets/certificates/generated/*
+certificates/generated/*
 **/.local
