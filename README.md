@@ -1,3 +1,20 @@
+## Table of Contents
+- [Introduction](#introduction)
+- [Deploy and tear down the Kafka cluster](#deploy-and-tear-down-the-kafka-cluster)
+- [Access Control Center](#access-control-center)
+- [Access Kafka-UI](#access-kafka-ui)
+- [Access phpLDAPadmin](#access-phpldapadmin)
+- [Access PostgreSQL](#access-postgresql)
+- [Access MySQL](#access-mysql)
+- [Access MariaDB](#access-mariadb)
+- [Use cases](#use-cases)
+  - [Syslog use case](#syslog-use-case)
+  - [CSV use case](#csv-use-case)
+  - [Datagen Credit Cards use case](#datagen-credit-cards-use-case)
+- [List all Access Control List (ACL)](#list-all-access-control-list-acl)
+- [List all Confluent Role-based Access Control (RBAC)](#list-all-confluent-role-based-access-control-rbac)
+- [Additional notes](#additional-notes)
+
 ## Introduction
 This is an enhanced version of a tutorial from the official Confluent [repository](https://github.com/confluentinc/confluent-kubernetes-examples), specifically focusing on the [production-secure-deploy](https://github.com/confluentinc/confluent-kubernetes-examples/tree/master/security/production-secure-deploy) section. In this improved tutorial, I've introduced additional features and tools, such as PostgreSQL, MySQL, and MariaDB databases, Kafka-UI, and phpLDAPadmin, along with various production-like use cases.
 
@@ -37,7 +54,7 @@ psql "host=localhost port=30920 user=postgres password=change-me dbname=postgres
 
 #### From your local machine with TLS:
 ```sh
-psql "host=localhost port=30920 user=postgres password=change-me dbname=postgres sslmode=verify-full sslrootcert=./../certificates/generated/ca.pem sslcert=./../certificates/generated/postgres.pem sslkey=./../certificates/generated/postgres-key.pem"
+psql "host=localhost port=30920 user=postgres password=change-me dbname=postgres sslmode=verify-full sslrootcert=./../assets/certificates/generated/ca.pem sslcert=./../assets/certificates/generated/postgres.pem sslkey=./../assets/certificates/generated/postgres-key.pem"
 ```
 
 #### From inside the PostgreSQL container without TLS:
@@ -82,7 +99,7 @@ mysql --host=localhost --port 30921 --database=mysql --user=mysql --password=cha
 
 #### From your local machine with TLS:
 ```sh
-mysql --host=localhost --port 30921 --database=mysql --user=mysql --password=change-me --protocol=tcp --ssl-mode=VERIFY_IDENTITY --ssl-ca=./../certificates/generated/ca.pem --ssl-cert=./../certificates/generated/mysql.pem --ssl-key=./../certificates/generated/mysql-key.pem
+mysql --host=localhost --port 30921 --database=mysql --user=mysql --password=change-me --protocol=tcp --ssl-mode=VERIFY_IDENTITY --ssl-ca=./../assets/certificates/generated/ca.pem --ssl-cert=./../assets/certificates/generated/mysql.pem --ssl-key=./../assets/certificates/generated/mysql-key.pem
 ```
 
 #### From inside the MySQL container without TLS:
@@ -110,7 +127,7 @@ mysql --host=localhost --port 30922 --database=mariadb --user=mariadb --password
 
 #### From your local machine with TLS:
 ```sh
-mysql --host=localhost --port 30922 --database=mariadb --user=mariadb --password=change-me --protocol=tcp --ssl-mode=VERIFY_IDENTITY --ssl-ca=./../certificates/generated/ca.pem --ssl-cert=./../certificates/generated/mariadb.pem --ssl-key=./../certificates/generated/mariadb-key.pem
+mysql --host=localhost --port 30922 --database=mariadb --user=mariadb --password=change-me --protocol=tcp --ssl-mode=VERIFY_IDENTITY --ssl-ca=./../assets/certificates/generated/ca.pem --ssl-cert=./../assets/certificates/generated/mariadb.pem --ssl-key=./../assets/certificates/generated/mariadb-key.pem
 ```
 
 #### From inside the MariaDB container without TLS:
@@ -132,16 +149,9 @@ To disable non-secure connections on MariaDB, open the file [mariadb-values.yaml
 Once the Kafka cluster has been deployed on the local machine, we are ready to deploy the use cases.
 
 #### Syslog use case
-The `syslog` use case uses a Python [script](docker-images/alpine-syslog/syslog_gen.py), that is running on Alpine container, to generate syslog messages. These messages are stored on the `syslog` topic and then persisted in PostgreSQL.
+The `syslog` use case uses a Python [script](docker-images/alpine-syslog/syslog_gen.py), that is running on Alpine container, to generate syslog messages. These messages are stored on the `syslog` topic and then persisted in a PostgreSQL instance.
 
 Please find below the steps to deploy and teardown the `syslog` use case.
-
-Adjust the permissions of both scripts ([deploy-syslog](usecases/syslog/deploy-syslog.sh) and [teardown-syslog](usecases/syslog/teardown-syslog.sh)) to grant them execute permissions.
-```sh
-cd usecases/syslog
-chmod +x deploy-syslog.sh
-chmod +x teardown-syslog.sh
-```
 
 Deploy the `syslog` use case:
 ```sh
@@ -159,16 +169,9 @@ Also, the syslog source connector is adding a termination character \u0000 at th
 
 #### CSV use case
 
-The `csv` use case uses a csv [file](usecases/csv/sample.csv) as the source of data. The data is stored on the `csv` topic and then persisted in MySQL.
+The `csv` use case uses a csv [file](usecases/csv/sample.csv) as the source of data. The data is stored on the `csv` topic and then persisted in a MySQL instance.
 
 Please find below the steps to deploy and teardown the `csv` use case.
-
-Adjust the permissions of both scripts ([deploy-csv](usecases/csv/deploy-csv.sh) and [teardown-csv](usecases/csv/teardown-csv.sh)) to grant them execute permissions.
-```sh
-cd usecases/csv
-chmod +x deploy-csv.sh
-chmod +x teardown-csv.sh
-```
 
 Deploy the `csv` use case:
 ```sh
@@ -181,16 +184,9 @@ Tear down the `csv` use case:
 ```
 
 #### Datagen Credit Cards use case
-The `datagen credit cards` use case utilizes the [Datagen Source Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-datagen/) that generates random credit card data that is stored in the `datagen-credit_cards` topic. Four fields are generated: `card_id`, `card_number`, `cvv`, and `expiration_date`. The `card_id` is an incremental number that starts at 1. The `card_number` is a random number ranging from `0000-0000-0000-0000` to `9999-9999-9999-9999`. The `cvv` is a random number ranging from `000` to `999`. Lastly, the `expiration_date` begins at 01/23 and ends at 12/29. Then, a sink connector is used to persist this data in a table on the MariaDB instance.
+The `datagen credit cards` use case uses the [Datagen Source Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-datagen/) that generates random credit card data that is stored in the `datagen-credit_cards` topic. Four fields are generated: `card_id`, `card_number`, `cvv`, and `expiration_date`. The `card_id` is an incremental number that starts at 1. The `card_number` is a random number ranging from `0000-0000-0000-0000` to `9999-9999-9999-9999`. The `cvv` is a random number ranging from `000` to `999`. Lastly, the `expiration_date` begins at 01/23 and ends at 12/29. Then, a sink connector is used to persist this data in a table in a MariaDB instance.
 
 Please find below the steps to deploy and teardown the `datagen credit` cards use case.
-
-Adjust the permissions of both scripts ([deploy-datagen-credit_cards](usecases/datagen-credit_cards/deploy-datagen-credit_cards.sh) and [teardown-datagen-credit_cards](usecases/datagen-credit_cards/teardown-datagen-credit_cards.sh)) to grant them execute permissions.
-```sh
-cd usecases/datagen-credit_cards
-chmod +x deploy-datagen-credit_cards.sh
-chmod +x teardown-datagen-credit_cards.sh
-```
 
 Deploy the `datagen credit cards` use case:
 ```sh
