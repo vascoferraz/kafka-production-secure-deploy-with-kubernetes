@@ -214,3 +214,8 @@ kubectl wait --for=condition=Ready pod/mariadb-0 --timeout=600s
 docker build -t alpine-debug:3.18.4 --progress=plain -f "${DOCKER_IMAGE_DIR}/alpine-debug/Dockerfile" "${TUTORIAL_HOME}"
 kubectl apply -f "${TUTORIAL_HOME}/manifests/alpine-debug.yaml"
 kubectl wait --for=condition=Ready pod/alpine-debug --timeout=600s
+
+# Build and deploy Ubuntu container used for debug
+docker build -t ubuntu-debug:jammy --progress=plain -f "${DOCKER_IMAGE_DIR}/ubuntu-debug/Dockerfile" "${TUTORIAL_HOME}"
+kubectl apply -f "${TUTORIAL_HOME}/manifests/ubuntu-debug.yaml"
+kubectl wait --for=condition=Ready pod/ubuntu-debug --timeout=600s
