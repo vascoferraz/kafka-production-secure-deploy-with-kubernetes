@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu-debug
+  namespace: confluent
+spec:
+  containers:
+  - image: ubuntu-debug:jammy
+    command:
+      - /bin/sh
+      - "-c"
+      - "sleep 60m"
+    imagePullPolicy: IfNotPresent
+    name: ubuntu-debug
+  restartPolicy: Always

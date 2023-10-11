@@ -17,6 +17,7 @@ done
 kubectl delete confluentrolebinding --all
 kubectl delete --ignore-not-found=true -f "${TUTORIAL_HOME}/manifests/confluent-platform-production.yaml"
 kubectl delete --ignore-not-found=true -f "${TUTORIAL_HOME}/manifests/alpine-debug.yaml"
+kubectl delete --ignore-not-found=true -f "${TUTORIAL_HOME}/manifests/ubuntu-debug.yaml"
 
 SECRETS=(
     c3-mds-client
