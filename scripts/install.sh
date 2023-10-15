@@ -49,7 +49,7 @@ mkdir "${CERT_OUT_DIR}" && cfssl gencert -initca "${CERT_SRC_DIR}/ca-csr.json" |
 # Validate Certificate Authority
 openssl x509 -in "${CA_CERT_PATH}" -text -noout
 
-DOMAINS=(server ldap kafka-ui phpldapadmin postgres mysql mariadb)
+DOMAINS=(server ldap kafka-ui kafdrop phpldapadmin postgres mysql mariadb)
 for domain in "${DOMAINS[@]}"
 do
     # Create ${domain} certificates with the appropriate SANs (SANs listed in ${domain}-domain.json)
@@ -164,6 +164,35 @@ helm upgrade --install kafka-ui kafka-ui/kafka-ui --version 0.7.5 -f "${TUTORIAL
 POD_NAME=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep kafka-ui)
 kubectl wait --for=condition=Ready pod/${POD_NAME} --timeout=600s
 
+# Create secret with keystore and truststore for Kafrop container
+STORE_PASSWORD="mystorepassword"
+openssl pkcs12 -export -in "${CERT_OUT_DIR}/kafdrop.pem" -inkey "${CERT_OUT_DIR}/kafdrop-key.pem" -out "${CERT_OUT_DIR}/keystore.p12" -password pass:"${STORE_PASSWORD}"
+if keytool -list -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass "${STORE_PASSWORD}" -alias ca >/dev/null 2>&1; then
+  # The "ca" alias exists, so delete it and create a new one
+  keytool -delete -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass "${STORE_PASSWORD}" -alias ca -noprompt
+  echo "Alias 'ca' deleted from the keystore."
+  keytool -importcert -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass "${STORE_PASSWORD}" -alias ca -file "${CA_CERT_PATH}" -noprompt
+  echo "Alias 'ca' imported to the keystore."
+else
+  # The "ca" alias does not exist
+  keytool -importcert -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass "${STORE_PASSWORD}" -alias ca -file "${CA_CERT_PATH}" -noprompt
+  echo "Alias 'ca' imported to the keystore."
+fi
+kubectl create secret generic kafdrop-pkcs12 --save-config --dry-run=client \
+  --from-file=cacerts.pem="${CA_CERT_PATH}" \
+  --from-file=privkey.pem="${CERT_OUT_DIR}/kafdrop-key.pem" \
+  --from-file=fullchain.pem="${CERT_OUT_DIR}/kafdrop.pem" \
+  --from-literal=jksPassword.txt=jksPassword="${STORE_PASSWORD}" \
+  --from-file=keystore.p12="${CERT_OUT_DIR}/keystore.p12" \
+  --from-file=truststore.p12="${CERT_OUT_DIR}/truststore.p12" \
+  --from-file=kafka.properties="${TUTORIAL_HOME}/manifests/kafdrop/kafka.properties" \
+  -o yaml | kubectl apply -f -
+
+# Deploy Kafdrop container
+helm upgrade --install kafdrop "${TUTORIAL_HOME}/manifests/kafdrop"
+POD_NAME=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep kafdrop)
+kubectl wait --for=condition=Ready pod/${POD_NAME} --timeout=600s
+
 # Build custom phpLDAPadmin image
 docker build -t osixia/phpldapadmin-vf:0.9.0 --progress=plain -f "${DOCKER_IMAGE_DIR}/phpldapadmin/Dockerfile" "${TUTORIAL_HOME}"
 
@@ -171,7 +200,7 @@ docker build -t osixia/phpldapadmin-vf:0.9.0 --progress=plain -f "${DOCKER_IMAGE
 helm upgrade --install phpldapadmin cetic/phpldapadmin --version 0.1.4  -f "${TUTORIAL_HOME}/manifests/phpldapadmin-values.yaml"
 POD_NAME=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep phpldapadmin)
 kubectl wait --for=condition=Ready pod/${POD_NAME} --timeout=600s
-kubectl patch service phpldapadmin -p '{"spec": {"ports": [{"name": "https","port": 443,"nodePort": 30902}]}}'
+kubectl patch service phpldapadmin -p '{"spec": {"ports": [{"name": "https","port": 443,"nodePort": 30903}]}}'
 kubectl patch deployment phpldapadmin -p '{"spec": {"template": {"spec": {"containers": [{"name": "phpldapadmin", "args": ["--copy-service", "--loglevel=debug"]}]}}}}'
 
 # Create secret for PostgreSQL container
