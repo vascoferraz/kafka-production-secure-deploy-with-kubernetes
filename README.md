@@ -3,6 +3,7 @@
 - [Deploy and tear down the Kafka cluster](#deploy-and-tear-down-the-kafka-cluster)
 - [Access Control Center](#access-control-center)
 - [Access Kafka-UI](#access-kafka-ui)
+- [Access Kafdrop](#access-kafdrop)
 - [Access phpLDAPadmin](#access-phpldapadmin)
 - [Access PostgreSQL](#access-postgresql)
 - [Access MySQL](#access-mysql)
