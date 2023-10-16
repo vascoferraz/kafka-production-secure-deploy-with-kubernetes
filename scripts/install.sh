@@ -138,17 +138,19 @@ kubectl exec -it kafka-0 -c kafka -- kafka-acls --bootstrap-server kafka.conflue
 
 # Create secret with keystore and truststore for Kafka-UI container
 STORE_PASSWORD="mystorepassword"
-openssl pkcs12 -export -in "${CERT_OUT_DIR}/kafka-ui.pem" -inkey "${CERT_OUT_DIR}/kafka-ui-key.pem" -out "${CERT_OUT_DIR}/keystore.p12" -password pass:"${STORE_PASSWORD}"
+openssl pkcs12 -export -in "${CERT_OUT_DIR}/kafka-ui.pem" -inkey "${CERT_OUT_DIR}/kafka-ui-key.pem" -out "${CERT_OUT_DIR}/kafka-ui-tmp.p12" -password pass:"${STORE_PASSWORD}" -name kafka-ui
+keytool -importkeystore -srckeystore "${CERT_OUT_DIR}/kafka-ui-tmp.p12" -srcstoretype PKCS12 -srcstorepass "${STORE_PASSWORD}" -destkeystore "${CERT_OUT_DIR}/keystore.p12" -deststoretype PKCS12 -deststorepass "${STORE_PASSWORD}" -srcalias kafka-ui -destalias kafka-ui -noprompt
+
 if keytool -list -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass "${STORE_PASSWORD}" -alias ca >/dev/null 2>&1; then
   # The "ca" alias exists, so delete it and create a new one
   keytool -delete -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass "${STORE_PASSWORD}" -alias ca -noprompt
-  echo "Alias 'ca' deleted from the keystore."
+  echo "Alias 'ca' deleted from the truststore."
   keytool -importcert -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass "${STORE_PASSWORD}" -alias ca -file "${CA_CERT_PATH}" -noprompt
-  echo "Alias 'ca' imported to the keystore."
+  echo "Alias 'ca' imported to the truststore."
 else
   # The "ca" alias does not exist
   keytool -importcert -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass "${STORE_PASSWORD}" -alias ca -file "${CA_CERT_PATH}" -noprompt
-  echo "Alias 'ca' imported to the keystore."
+  echo "Alias 'ca' imported to the truststore."
 fi
 kubectl create secret generic kafkaui-pkcs12 --save-config --dry-run=client \
   --from-file=cacerts.pem="${CA_CERT_PATH}" \
@@ -166,17 +168,19 @@ kubectl wait --for=condition=Ready pod/${POD_NAME} --timeout=600s
 
 # Create secret with keystore and truststore for Kafrop container
 STORE_PASSWORD="mystorepassword"
-openssl pkcs12 -export -in "${CERT_OUT_DIR}/kafdrop.pem" -inkey "${CERT_OUT_DIR}/kafdrop-key.pem" -out "${CERT_OUT_DIR}/keystore.p12" -password pass:"${STORE_PASSWORD}"
+openssl pkcs12 -export -in "${CERT_OUT_DIR}/kafdrop.pem" -inkey "${CERT_OUT_DIR}/kafdrop-key.pem" -out "${CERT_OUT_DIR}/kafdrop-tmp.p12" -password pass:"${STORE_PASSWORD}" -name kafdrop
+keytool -importkeystore -srckeystore "${CERT_OUT_DIR}/kafdrop-tmp.p12" -srcstoretype PKCS12 -srcstorepass "${STORE_PASSWORD}" -destkeystore "${CERT_OUT_DIR}/keystore.p12" -deststoretype PKCS12 -deststorepass "${STORE_PASSWORD}" -srcalias kafdrop -destalias kafdrop -noprompt
+
 if keytool -list -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass "${STORE_PASSWORD}" -alias ca >/dev/null 2>&1; then
   # The "ca" alias exists, so delete it and create a new one
   keytool -delete -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass "${STORE_PASSWORD}" -alias ca -noprompt
-  echo "Alias 'ca' deleted from the keystore."
+  echo "Alias 'ca' deleted from the truststore."
   keytool -importcert -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass "${STORE_PASSWORD}" -alias ca -file "${CA_CERT_PATH}" -noprompt
-  echo "Alias 'ca' imported to the keystore."
+  echo "Alias 'ca' imported to the truststore."
 else
   # The "ca" alias does not exist
   keytool -importcert -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass "${STORE_PASSWORD}" -alias ca -file "${CA_CERT_PATH}" -noprompt
-  echo "Alias 'ca' imported to the keystore."
+  echo "Alias 'ca' imported to the truststore."
 fi
 kubectl create secret generic kafdrop-pkcs12 --save-config --dry-run=client \
   --from-file=cacerts.pem="${CA_CERT_PATH}" \

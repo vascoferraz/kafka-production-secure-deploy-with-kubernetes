@@ -40,6 +40,12 @@ service:
   port: 9000
   nodePort: 30902
 
+tls:
+  enable: true
+  keystorePath: /mnt/sslcerts/keystore.p12
+  keystorePassword: mystorepassword
+  keystoreAlias: kafdrop
+
 ingress:
   enabled: false
   annotations: {}
