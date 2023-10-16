@@ -56,6 +56,14 @@ spec:
             value: "{{ .Values.kafka.keystoreFile }}"
           - name: SERVER_PORT
             value: "{{ .Values.server.port }}"
+          - name: SSL_ENABLED
+            value: "{{ .Values.tls.enable }}"
+          - name: SSL_KEY_STORE
+            value: "{{ .Values.tls.keystorePath }}"
+          - name: SSL_KEY_STORE_PASSWORD
+            value: "{{ .Values.tls.keystorePassword }}"
+          - name: SSL_KEY_ALIAS
+            value: "{{ .Values.tls.keystoreAlias }}"
           - name: CMD_ARGS
 {{- if .Values.mountProtoDesc.enabled }}
             value: "--message.format=PROTOBUF --protobufdesc.directory=/protodesc/ {{ .Values.cmdArgs }}"
@@ -70,15 +78,17 @@ spec:
           livenessProbe:
             httpGet:
               path: "{{ .Values.server.servlet.contextPath | trimSuffix "/" }}/actuator/health"
-              port: http
+              port: 9000
+              scheme: "{{- if .Values.tls.enable }}HTTPS{{- else}}HTTP{{- end}}"
             initialDelaySeconds: 180
             periodSeconds: 30
             timeoutSeconds: 10
           readinessProbe:
             httpGet:
               path: "{{ .Values.server.servlet.contextPath | trimSuffix "/" }}/actuator/health"
-              port: http
-            initialDelaySeconds: 20
+              port: 9000
+              scheme: "{{- if .Values.tls.enable }}HTTPS{{- else}}HTTP{{- end}}"
+            initialDelaySeconds: 60
             periodSeconds: 5
             timeoutSeconds: 10
           resources:
