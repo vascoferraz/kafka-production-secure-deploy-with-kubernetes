@@ -22,9 +22,9 @@ spec:
         imagePullPolicy: IfNotPresent
         image: {{ .Values.image }}
         ports:
-        - containerPort: 389
+        - containerPort: 2389
           name: ldap
-        - containerPort: 636
+        - containerPort: 2636
           name: ldaps
         env:
         {{- if .Values.tls.enabled }}

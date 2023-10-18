@@ -69,7 +69,7 @@ spec:
       provider:
         type: ldap
         ldap:
-          address: ldaps://ldap.confluent.svc.cluster.local:636
+          address: ldaps://ldap.confluent.svc.cluster.local:2636
           authentication:
             type: simple
             simple:

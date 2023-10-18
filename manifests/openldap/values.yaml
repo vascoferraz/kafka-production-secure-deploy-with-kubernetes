@@ -1,5 +1,5 @@
 name: ldap
-image: osixia/openldap:1.5.0
+image: osixia/openldap:1.5.0-vf
 tls:
   enabled: true
 
@@ -12,8 +12,12 @@ env:
   LDAP_READONLY_USER_USERNAME: "mds"
   LDAP_READONLY_USER_PASSWORD: "Developer!"
   LDAP_BASE_DN: "dc=test,dc=com"
-  LDAP_OPT_DEBUG_LEVEL: 7
-
+  LDAP_OPT_DEBUG_LEVEL: "255"
+  LDAP_PORT: "2389"
+  LDAPS_PORT: "2636"
+  LDAP_OPENLDAP_UID: "911"
+  LDAP_OPENLDAP_GID: "911"
+  
 # Adding integer before ldif name to allow sequence order.
 ldifs:
   00_kafka.ldif: |-
