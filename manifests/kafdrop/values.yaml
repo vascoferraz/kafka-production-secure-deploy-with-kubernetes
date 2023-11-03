@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: obsidiandynamics/kafdrop
-  tag: latest
+  tag: 4.0.1
   pullPolicy: Always
 
 kafka:
