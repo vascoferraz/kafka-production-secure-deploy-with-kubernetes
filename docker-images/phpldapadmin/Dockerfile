@@ -1,4 +1,4 @@
-FROM osixia/phpldapadmin:0.9.0
+FROM leenooks/phpldapadmin:2.0.0-dev
 
 USER root
 

@@ -187,7 +187,7 @@ POD_NAME=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | gr
 kubectl wait --for=condition=Ready pod/${POD_NAME} --timeout=600s
 
 # Build custom phpLDAPadmin image
-docker build -t osixia/phpldapadmin-vf:0.9.0 --progress=plain -f "${DOCKER_IMAGE_DIR}/phpldapadmin/Dockerfile" "${TUTORIAL_HOME}"
+docker build -t leenooks/phpldapadmin-vf:2.0.0-dev --progress=plain -f "${DOCKER_IMAGE_DIR}/phpldapadmin/Dockerfile" "${TUTORIAL_HOME}"
 
 # Deploy phpLDAPadmin container
 helm upgrade --install phpldapadmin cetic/phpldapadmin --version 0.1.4  -f "${TUTORIAL_HOME}/manifests/phpldapadmin-values.yaml"
