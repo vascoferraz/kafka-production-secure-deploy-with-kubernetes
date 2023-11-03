@@ -15,6 +15,8 @@ CA_CERT_PATH="${CERT_OUT_DIR}/ca.pem"
 CA_KEY_PATH="${CERT_OUT_DIR}/ca-key.pem"
 CA_CONFIG_PATH="${CERT_SRC_DIR}/ca-config.json"
 
+STORE_PASSWORD="mystorepassword"
+
 # Install dependencies on Mac OS
 brew install cfssl helm java mysql postgresql@16
 # echo 'export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"' >> ~/.zshrc
@@ -150,7 +152,6 @@ else
 fi
 
 # Create secret with keystore and truststore for Kafka-UI container
-STORE_PASSWORD="mystorepassword"
 openssl pkcs12 -export -in "${CERT_OUT_DIR}/kafka-ui.pem" -inkey "${CERT_OUT_DIR}/kafka-ui-key.pem" -out "${CERT_OUT_DIR}/kafka-ui-tmp.p12" -password pass:"${STORE_PASSWORD}" -name kafka-ui
 keytool -importkeystore -srckeystore "${CERT_OUT_DIR}/kafka-ui-tmp.p12" -srcstoretype PKCS12 -srcstorepass "${STORE_PASSWORD}" -destkeystore "${CERT_OUT_DIR}/keystore.p12" -deststoretype PKCS12 -deststorepass "${STORE_PASSWORD}" -srcalias kafka-ui -destalias kafka-ui -noprompt
 kubectl create secret generic kafkaui-pkcs12 --save-config --dry-run=client \
@@ -168,7 +169,6 @@ POD_NAME=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | gr
 kubectl wait --for=condition=Ready pod/${POD_NAME} --timeout=600s
 
 # Create secret with keystore and truststore for Kafrop container
-STORE_PASSWORD="mystorepassword"
 openssl pkcs12 -export -in "${CERT_OUT_DIR}/kafdrop.pem" -inkey "${CERT_OUT_DIR}/kafdrop-key.pem" -out "${CERT_OUT_DIR}/kafdrop-tmp.p12" -password pass:"${STORE_PASSWORD}" -name kafdrop
 keytool -importkeystore -srckeystore "${CERT_OUT_DIR}/kafdrop-tmp.p12" -srcstoretype PKCS12 -srcstorepass "${STORE_PASSWORD}" -destkeystore "${CERT_OUT_DIR}/keystore.p12" -deststoretype PKCS12 -deststorepass "${STORE_PASSWORD}" -srcalias kafdrop -destalias kafdrop -noprompt
 kubectl create secret generic kafdrop-pkcs12 --save-config --dry-run=client \
