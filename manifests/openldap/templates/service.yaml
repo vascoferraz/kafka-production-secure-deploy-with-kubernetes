@@ -7,9 +7,9 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   ports:
-  - port: 389
+  - port: 2389
     name: ldap
-  - port: 636
+  - port: 2636
     name: ldaps
   clusterIP: None
   selector:

@@ -69,11 +69,12 @@ kubectl create secret generic ldap-sslcerts --save-config --dry-run=client \
   -o yaml | kubectl apply -f -
 
 # Deploy OpenLDAP
+docker build -t osixia/openldap:1.5.0-vf --progress=plain -f "${DOCKER_IMAGE_DIR}/openldap/Dockerfile" "${TUTORIAL_HOME}"
 helm upgrade --install ldap "${TUTORIAL_HOME}/manifests/openldap"
 kubectl wait --for=condition=Ready pod/ldap-0 --timeout=600s
 
 # Query the OpenLDAP server
-SEARCH_CMD=(ldapsearch -LLL -x -H ldap://ldap.confluent.svc.cluster.local:389 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!')
+SEARCH_CMD=(ldapsearch -LLL -x -H ldap://ldap.confluent.svc.cluster.local:2389 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!')
 while true
 do
     kubectl exec -it ldap-0 -- "${SEARCH_CMD[@]}" && break || sleep 5
