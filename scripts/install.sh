@@ -239,3 +239,11 @@ kubectl wait --for=condition=Ready pod/alpine-debug --timeout=600s
 docker build -t ubuntu-debug:jammy --progress=plain -f "${DOCKER_IMAGE_DIR}/ubuntu-debug/Dockerfile" "${TUTORIAL_HOME}"
 kubectl apply -f "${TUTORIAL_HOME}/manifests/ubuntu-debug.yaml"
 kubectl wait --for=condition=Ready pod/ubuntu-debug --timeout=600s
+
+# Deploy Julie-Ops container
+kubectl apply -f "${TUTORIAL_HOME}/manifests/julie-ops/julie-ops-pod.yaml"
+kubectl wait --for=condition=Ready pod/julie-ops
+kubectl cp "${TUTORIAL_HOME}/manifests/julie-ops" julie-ops:/ -c julie-ops
+kubectl cp "${TUTORIAL_HOME}/certificates/generated/ca.pem" julie-ops:/usr/local/share/ca-certificates/ -c julie-ops
+kubectl exec -c julie-ops -it julie-ops -- update-ca-certificates
+kubectl exec -c julie-ops -it julie-ops -- /bin/bash julie-ops-cli.sh --topology /julie-ops/julie_ops_topology.yaml --clientConfig /julie-ops/julie_ops.properties --plans /julie-ops/plans.yaml

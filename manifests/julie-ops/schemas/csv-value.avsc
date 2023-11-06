@@ -1,0 +1,56 @@
+{
+    "type": "record",
+    "name": "Value",
+    "namespace": "com.github.jcustenborder.kafka.connect.model",
+    "fields": [
+        {
+            "name": "first_name",
+            "type": [
+                "null",
+                "string"
+            ],
+            "default": null
+        },
+        {
+            "name": "last_name",
+            "type": [
+                "null",
+                "string"
+            ],
+            "default": null
+        },
+        {
+            "name": "email",
+            "type": [
+                "null",
+                "string"
+            ],
+            "default": null
+        },
+        {
+            "name": "gender",
+            "type": [
+                "null",
+                "string"
+            ],
+            "default": null
+        },
+        {
+            "name": "ip_address",
+            "type": [
+                "null",
+                "string"
+            ],
+            "default": null
+        },
+        {
+            "name": "date",
+            "type": [
+                "null",
+                "string"
+            ],
+            "default": null
+        }
+    ],
+    "connect.name": "com.github.jcustenborder.kafka.connect.model.Value"
+}

@@ -1,0 +1,23 @@
+context: "com"
+source: "vascoferraz"
+projects:
+- name: "kafka"
+  consumers: []
+  producers: []
+  streams: []
+  connectors:
+    artefacts:
+        - path: "connectors/csv-source-connector.json"
+          server: "connector0"
+          name: "csv-source-connector"
+        - path: "connectors/csv-sink-connector.json"
+          server: "connector0"
+          name: "csv-sink-connector"
+    access_control:
+        - principal: "User:connect"
+  topics:
+  - name: "csv" # topicName: com-vascoferraz-kafka-csv
+    plan: "default"
+    schemas:
+        #key.schema.file: "schemas/csv-key.avsc"
+        value.schema.file: "schemas/csv-value.avsc"

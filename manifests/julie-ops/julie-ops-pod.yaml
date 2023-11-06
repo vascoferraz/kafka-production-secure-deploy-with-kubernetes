@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: julie-ops
+spec:
+  containers:
+  - name: julie-ops
+    image: purbon/kafka-topology-builder:4.4.1
+    command: ["sh", "-c", "--" ]
+    args: ["exec tail -f /dev/null"]
+  restartPolicy: OnFailure
