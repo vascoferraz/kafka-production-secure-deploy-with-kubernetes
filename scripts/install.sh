@@ -134,9 +134,7 @@ ROLE_BIND_DIR="${TUTORIAL_HOME}/rolebindings"
 kubectl apply -f "${ROLE_BIND_DIR}/controlcenter-testadmin-rolebindings.yaml"
 kubectl apply -f "${ROLE_BIND_DIR}/controlcenter-connect-rolebindings.yaml"
 kubectl apply -f "${ROLE_BIND_DIR}/controlcenter-sr-rolebindings.yaml"
-
-# Set ACL for user connect
-kubectl exec -it kafka-0 -c kafka -- kafka-acls --bootstrap-server kafka.confluent.svc.cluster.local:9092 --command-config /opt/confluentinc/etc/kafka/kafka.properties --add --allow-principal User:connect --allow-host "*" --operation All --topic "*" --group "*"
+kubectl apply -f "${ROLE_BIND_DIR}/connect-1.yaml"
 
 # Create a truststore for use in Kafka-UI and Kafdrop.
 if keytool -list -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass "${STORE_PASSWORD}" -alias ca >/dev/null 2>&1; then
