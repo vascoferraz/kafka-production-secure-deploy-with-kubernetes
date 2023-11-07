@@ -129,12 +129,12 @@ do
     kubectl wait --for=condition=Ready --timeout=600s "pod/${pod}"
 done
 
-# Create RBAC Rolebindings for Control Center admin
+# Create custom RBAC Rolebindings
 ROLE_BIND_DIR="${TUTORIAL_HOME}/rolebindings"
-kubectl apply -f "${ROLE_BIND_DIR}/controlcenter-testadmin-rolebindings.yaml"
-kubectl apply -f "${ROLE_BIND_DIR}/controlcenter-connect-rolebindings.yaml"
-kubectl apply -f "${ROLE_BIND_DIR}/controlcenter-sr-rolebindings.yaml"
-kubectl apply -f "${ROLE_BIND_DIR}/connect-1.yaml"
+kubectl apply -f "${ROLE_BIND_DIR}/cfrb-testadmin-0.yaml"
+kubectl apply -f "${ROLE_BIND_DIR}/cfrb-connect-0.yaml"
+kubectl apply -f "${ROLE_BIND_DIR}/cfrb-connect-1.yaml"
+kubectl apply -f "${ROLE_BIND_DIR}/cfrb-schemaregistry-0.yaml"
 
 # Create a truststore for use in Kafka-UI and Kafdrop.
 if keytool -list -storetype PKCS12 -keystore "${CERT_OUT_DIR}/truststore.p12" -storepass "${STORE_PASSWORD}" -alias ca >/dev/null 2>&1; then

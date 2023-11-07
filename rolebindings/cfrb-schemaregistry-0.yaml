@@ -3,7 +3,7 @@
 apiVersion: platform.confluent.io/v1beta1
 kind: ConfluentRolebinding
 metadata:
-  name: sr-rb
+  name: sr-cluster
   namespace: confluent
 spec:
   principal:
@@ -14,12 +14,12 @@ spec:
   #kafkaRestClassRef:
   # name: default
 ---
-# rolebinding `sr-rb-sr` allows `sr` to see schemaregistry information
+# rolebinding `sr-sr` allows `sr` to see schemaregistry information
 # `schemaRegistryCllusterId` pattern: `id_<schemaregistry.name>_<namespace>`
 apiVersion: platform.confluent.io/v1beta1
 kind: ConfluentRolebinding
 metadata:
-  name: sr-rb-sr
+  name: sr-sr
   namespace: confluent
 spec:
   principal:
@@ -32,7 +32,7 @@ spec:
   #kafkaRestClassRef:
   # name: default
 ---
-# rolebinding `sr-rb-connect` allows `sr` to see connect cluster
+# rolebinding `sr-connect` allows `sr` to see connect cluster
 # `connectClusterId` pattern: `<namespace>.<connect.name>`
 apiVersion: platform.confluent.io/v1beta1
 kind: ConfluentRolebinding
