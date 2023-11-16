@@ -5,7 +5,18 @@ metadata:
 spec:
   containers:
   - name: julie-ops
-    image: purbon/kafka-topology-builder:4.4.1
+    image: purbon/kafka-topology-builder-vf:4.4.1
     command: ["sh", "-c", "--" ]
     args: ["exec tail -f /dev/null"]
+    env:
+    - name: JAVA_TOOL_OPTIONS
+      value: "-Djavax.net.debug=ssl:handshake:verbose:keymanager:trustmanager -Djava.security.debug=access:stack"
+    volumeMounts:
+    - name: kafkaui-pkcs12
+      readOnly: false
+      mountPath: /mnt/sslcerts
   restartPolicy: OnFailure
+  volumes:
+    - name: kafkaui-pkcs12
+      secret:
+        secretName: kafkaui-pkcs12
