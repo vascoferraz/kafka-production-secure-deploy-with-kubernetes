@@ -23,6 +23,9 @@ RUN curl https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.3
 # Install vim
 RUN yum -y install vim
 
+# Install curl
+RUN yum -y install curl
+
 # Copy custom Single Message Transform that replaces all occurrences of the Unicode character \u0000 (or its equivalent in hexadecimal, \0x00)...
 # ... with nothing in the specified fields of a Struct record.
 # Reference: https://github.com/cyberjar09/StripUnicodeNullTransform
