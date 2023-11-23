@@ -8,4 +8,7 @@ RUN yum -y install vim
 # Install jq
 RUN yum -y install jq
 
+# Install curl
+RUN yum -y install curl
+
 USER appuser
