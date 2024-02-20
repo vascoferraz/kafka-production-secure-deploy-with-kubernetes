@@ -1,0 +1,33 @@
+{
+  "name": "drop-field-and-add-headers-source-connector",
+  "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+  "connection.url": "jdbc:mysql://mysql-0.mysql.confluent.svc.cluster.local:3306/mysql?user=mysql&password=change-me&useSSL=true&requireSSL=true&verifyServerCertificate=true&trustCertificateKeyStoreUrl=file:///mnt/sslcerts/truststore.p12&trustCertificateKeyStorePassword=mystorepassword",
+  "query": "SELECT * FROM csv",
+  "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+  "parse.key": true,
+  "value.converter": "io.confluent.connect.avro.AvroConverter",
+  "value.converter.schema.registry.url": "https://schemaregistry.confluent.svc.cluster.local:8081",
+  "value.converter.schema.registry.basic.auth.credentials.source": "USER_INFO",
+  "value.converter.schema.registry.basic.auth.user.info": "sr:sr-secret",
+  "value.converter.schema.registry.ssl.truststore.password": "${file:/mnt/sslcerts/jksPassword.txt:jksPassword}",
+  "value.converter.schema.registry.ssl.truststore.location": "/mnt/sslcerts/truststore.p12",
+  "sasl.mechanism": "PLAIN",
+  "security.protocol": "SASL_SSL",
+  "sasl.jaas.config": "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"kafka\" password=\"kafka-secret\";",
+  "topic.prefix": "drop-field-and-add-headers",
+  "poll.interval.ms": 3600000,
+  "mode": "bulk",
+
+  "transforms": "createKey,extractInt,moveFieldsToHeader",
+
+  "transforms.createKey.type": "org.apache.kafka.connect.transforms.ValueToKey",
+  "transforms.createKey.fields": "email",
+
+  "transforms.extractInt.type": "org.apache.kafka.connect.transforms.ExtractField$Key",
+  "transforms.extractInt.field": "email",
+
+  "transforms.moveFieldsToHeader.type": "org.apache.kafka.connect.transforms.HeaderFrom$Value",
+  "transforms.moveFieldsToHeader.fields": "ip_address",
+  "transforms.moveFieldsToHeader.headers": "ip_address",
+  "transforms.moveFieldsToHeader.operation": "move"
+}
